@@ -77,9 +77,9 @@ function readState() {
   };
 }
 
-function writeState(key, value) {
+function writeState(key, value, manageTransaction = true) {
   if (!Array.isArray(value)) throw new Error(`Collection ${key} must be an array`);
-  db.exec("BEGIN IMMEDIATE");
+  if (manageTransaction) db.exec("BEGIN IMMEDIATE");
   try {
     if (key === "categories") {
       db.exec("DELETE FROM categories");
@@ -114,11 +114,21 @@ function writeState(key, value) {
     } else {
       throw new Error(`Unknown state collection: ${key}`);
     }
-    db.exec("COMMIT");
+    if (manageTransaction) db.exec("COMMIT");
   } catch (error) {
-    db.exec("ROLLBACK");
+    if (manageTransaction) db.exec("ROLLBACK");
     throw error;
   }
+}
+
+function adjustProductStock(productId, quantityDelta) {
+  const row = db.prepare("SELECT payload FROM products WHERE id = ?").get(productId);
+  if (!row) throw new Error("Sản phẩm không còn tồn tại.");
+  const product = JSON.parse(row.payload);
+  const stock = Number(product.soLuongTon) - quantityDelta;
+  if (stock < 0) throw new Error(`Sản phẩm ${product.ten} không đủ tồn kho.`);
+  const next = { ...product, soLuongTon: stock, daBan: Math.max(0, Number(product.daBan || 0) + quantityDelta) };
+  db.prepare("UPDATE products SET stock = ?, payload = ? WHERE id = ?").run(stock, JSON.stringify(next), productId);
 }
 
 function readStoredUsers() {
@@ -256,6 +266,7 @@ async function handleApi(req, res, url) {
   if (req.method === "GET" && url.pathname === "/api/state") {
     const state = readState();
     const principal = authenticate(req);
+    if (req.headers.authorization && !principal) return jsonResponse(res, 401, { error: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại." });
     const privateState = principal
       ? Object.fromEntries(db.prepare("SELECT state_key, payload FROM user_state WHERE user_id = ?").all(principal.id).map(row => [row.state_key, JSON.parse(row.payload)]))
       : {};
@@ -303,6 +314,7 @@ async function handleApi(req, res, url) {
     }
     if (key === "orders") {
       const preserveUnseenOrders = [];
+      const cancellations = [];
       for (const [id, oldItem] of byId) {
         const next = nextById.get(id);
         const isBuyer = oldItem.buyerId === principal.id;
@@ -311,15 +323,62 @@ async function handleApi(req, res, url) {
         if (!next) return jsonResponse(res, 403, { error: "Không được xóa đơn hàng." });
         if (next && JSON.stringify(next) !== JSON.stringify(oldItem)) {
           const sameExceptStatus = ({ trangThai: _status, ...value }) => JSON.stringify(value);
-          const allowed = isBuyer && next.trangThai === "DaHuy" && oldItem.trangThai === "ChoXacNhan" && sameExceptStatus(next) === sameExceptStatus(oldItem)
-            || isSeller && next.buyerId === oldItem.buyerId && next.items?.length === oldItem.items?.length
-              && sameExceptStatus(next) === sameExceptStatus(oldItem)
-              && ["DangChuanBi", "DangGiao", "DaGiao"].includes(next.trangThai);
+          const nextSellerStatus = { ChoXacNhan: "DangChuanBi", DangChuanBi: "DangGiao", DangGiao: "DaGiao" }[oldItem.trangThai];
+          const isBuyerCancellation = isBuyer && next.trangThai === "DaHuy" && oldItem.trangThai === "ChoXacNhan" && sameExceptStatus(next) === sameExceptStatus(oldItem);
+          const isSellerTransition = isSeller && next.buyerId === oldItem.buyerId && next.items?.length === oldItem.items?.length
+            && sameExceptStatus(next) === sameExceptStatus(oldItem) && next.trangThai === nextSellerStatus;
+          const allowed = isBuyerCancellation || isSellerTransition;
           if (!allowed) return jsonResponse(res, 403, { error: "Bạn không có quyền sửa đơn hàng này." });
+          if (isBuyerCancellation) cancellations.push(oldItem);
         }
       }
-      for (const item of body.value) if (!byId.has(item.orderId) && item.buyerId !== principal.id) return jsonResponse(res, 403, { error: "Đơn hàng phải thuộc tài khoản đang đăng nhập." });
+      const newOrders = body.value.filter(item => !byId.has(item.orderId));
+      const user = readStoredUsers().find(item => item.id === principal.id);
+      const stockReserved = new Map();
+      for (const order of newOrders) {
+        if (order.buyerId !== principal.id || order.trangThai !== "ChoXacNhan" || !Array.isArray(order.items) || order.items.length === 0) {
+          return jsonResponse(res, 400, { error: "Đơn hàng mới không hợp lệ." });
+        }
+        if (!["COD", "QR", "SPayLater"].includes(order.phuongThucThanhToan)
+          || !order.tenNguoiNhan?.trim() || !/^0[35789][0-9]{8}$/.test(order.sdt || "") || !order.diaChi?.trim()) {
+          return jsonResponse(res, 400, { error: "Thiếu hoặc sai thông tin giao hàng/thanh toán." });
+        }
+        let subtotal = 0;
+        for (const item of order.items) {
+          const quantity = Number(item.soLuong);
+          if (!Number.isSafeInteger(quantity) || quantity < 1) return jsonResponse(res, 400, { error: "Số lượng sản phẩm không hợp lệ." });
+          const productRow = db.prepare("SELECT payload FROM products WHERE id = ?").get(item.productId);
+          if (!productRow) return jsonResponse(res, 409, { error: `Sản phẩm ${item.ten || item.productId} không còn trên sàn.` });
+          const product = JSON.parse(productRow.payload);
+          if (Number(item.donGia) !== Number(product.gia) || item.shopId !== product.nguoiBanId) return jsonResponse(res, 409, { error: "Giá hoặc thông tin shop đã thay đổi. Vui lòng tải lại giỏ hàng." });
+          const reserved = (stockReserved.get(item.productId) || 0) + quantity;
+          if (reserved > Number(product.soLuongTon)) return jsonResponse(res, 409, { error: `Sản phẩm ${product.ten} không đủ tồn kho.` });
+          stockReserved.set(item.productId, reserved);
+          subtotal += Number(product.gia) * quantity;
+        }
+        const coupon = String(order.maGiamGia || "").trim().toUpperCase();
+        let allowedDiscount = 0;
+        if (coupon && user?.mssv && coupon === String(user.mssv).toUpperCase()) allowedDiscount = 20000;
+        else if (coupon === "SINHVIEN2026") allowedDiscount = 25000;
+        else if (coupon === "FREESHIP") allowedDiscount = 15000;
+        else if (coupon) return jsonResponse(res, 400, { error: "Mã ưu đãi không hợp lệ." });
+        allowedDiscount = Math.min(subtotal, allowedDiscount);
+        if (Number(order.giamGia || 0) !== allowedDiscount || Number(order.tongTien) !== subtotal - allowedDiscount) {
+          return jsonResponse(res, 409, { error: "Tổng tiền không khớp với giá sản phẩm hiện tại." });
+        }
+      }
       valueToWrite = [...body.value, ...preserveUnseenOrders];
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        for (const order of newOrders) for (const item of order.items) adjustProductStock(item.productId, Number(item.soLuong));
+        for (const order of cancellations) for (const item of order.items) adjustProductStock(item.productId, -Number(item.soLuong));
+        writeState(key, valueToWrite, false);
+        db.exec("COMMIT");
+      } catch (error) {
+        db.exec("ROLLBACK");
+        return jsonResponse(res, 409, { error: error.message || "Không thể lưu đơn hàng." });
+      }
+      return jsonResponse(res, 200, { saved: true, key });
     }
     if (key === "reviews") {
       for (const item of body.value) {
@@ -396,15 +455,27 @@ async function handleApi(req, res, url) {
       if (amount > 0) {
         const order = db.prepare("SELECT payload FROM orders WHERE id = ?").get(orderId);
         const orderData = order && JSON.parse(order.payload);
-        if (!orderData || orderData.buyerId !== principal.id || orderData.trangThai !== "DaHuy" || orderData.phuongThucThanhToan !== "SPayLater" || Number(orderData.tongTien) !== amount) {
+        const charge = db.prepare("SELECT amount FROM wallet_charges WHERE order_id = ? AND user_id = ?").get(orderId, principal.id);
+        if (!orderData || !charge || Number(charge.amount) !== amount || orderData.buyerId !== principal.id || orderData.trangThai !== "DaHuy" || orderData.phuongThucThanhToan !== "SPayLater" || Number(orderData.tongTien) !== amount) {
           db.exec("ROLLBACK"); return jsonResponse(res, 403, { error: "Chỉ hoàn ví cho đơn SPayLater đã hủy hợp lệ." });
         }
         if (db.prepare("SELECT 1 FROM wallet_refunds WHERE order_id = ?").get(orderId)) {
           db.exec("ROLLBACK"); return jsonResponse(res, 409, { error: "Đơn hàng này đã được hoàn ví." });
         }
         db.prepare("INSERT INTO wallet_refunds (order_id, user_id, amount) VALUES (?, ?, ?)").run(orderId, principal.id, amount);
-      } else if ((users[index].viTraSau || 0) < Math.abs(amount)) {
-        db.exec("ROLLBACK"); return jsonResponse(res, 409, { error: "Số dư ví không đủ." });
+      } else {
+        const order = db.prepare("SELECT payload FROM orders WHERE id = ?").get(orderId);
+        const orderData = order && JSON.parse(order.payload);
+        if (!orderData || orderData.buyerId !== principal.id || orderData.trangThai !== "ChoXacNhan" || orderData.phuongThucThanhToan !== "SPayLater" || Number(orderData.tongTien) !== Math.abs(amount)) {
+          db.exec("ROLLBACK"); return jsonResponse(res, 403, { error: "Khoản trừ ví phải gắn với đơn SPayLater đang chờ." });
+        }
+        if (db.prepare("SELECT 1 FROM wallet_charges WHERE order_id = ?").get(orderId)) {
+          db.exec("ROLLBACK"); return jsonResponse(res, 409, { error: "Đơn hàng này đã thanh toán bằng ví." });
+        }
+        if ((users[index].viTraSau || 0) < Math.abs(amount)) {
+          db.exec("ROLLBACK"); return jsonResponse(res, 409, { error: "Số dư ví không đủ." });
+        }
+        db.prepare("INSERT INTO wallet_charges (order_id, user_id, amount) VALUES (?, ?, ?)").run(orderId, principal.id, Math.abs(amount));
       }
       users[index].viTraSau = (users[index].viTraSau || 0) + amount;
       writeStoredUsers(users);

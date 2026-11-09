@@ -168,7 +168,8 @@ const CartController = {
         // Regex kiểm tra định dạng Mã số sinh viên hợp lệ (8 - 10 ký tự số hoặc tiền tố SV)
         const mssvRegex = /^(SV|sv|BK|bk|DH|dh)?[0-9]{7,10}$/;
 
-        if (mssvRegex.test(code)) {
+        const currentUser = UserService.getCurrentUser();
+        if (mssvRegex.test(code) && currentUser?.mssv && code === currentUser.mssv.toUpperCase()) {
           this.discountAmount = 20000;
           this.appliedCoupon = code;
           this.updateCalculation();
@@ -289,18 +290,11 @@ const CartController = {
     const { subtotal, discount, finalTotal } = this.updateCalculation();
     const currentUser = UserService.getCurrentUser();
 
-    // 3. Nếu chọn Ví SPayLater: kiểm tra hạn mức
+    // 3. Nếu chọn Ví SPayLater: kiểm tra hạn mức khả dụng
     if (this.selectedPaymentMethod === "SPayLater") {
       const balance = currentUser ? (currentUser.viTraSau || 0) : 0;
       if (balance < finalTotal) {
         Toast.error("Hạn mức không đủ", `Số dư ví SPayLater của bạn (${FormatHelper.formatVND(balance)}) không đủ để thanh toán đơn hàng này (${FormatHelper.formatVND(finalTotal)})! Vui lòng chọn COD hoặc Chuyển khoản QR.`);
-        return;
-      }
-      // Trừ hạn mức ví
-      try {
-        await UserService.updateViTraSau(currentUser.id, -finalTotal);
-      } catch (error) {
-        Toast.error("Không thể thanh toán", error.message);
         return;
       }
     }
@@ -319,7 +313,9 @@ const CartController = {
       }));
 
     // 5. Tạo đơn hàng mới lưu vào LocalStorage
-    const newOrder = OrderService.createOrder({
+    let newOrder;
+    try {
+      newOrder = await OrderService.createOrder({
       buyerId: currentUser ? currentUser.id : "guest_user",
       tenNguoiNhan: name,
       sdt: phone,
@@ -327,9 +323,25 @@ const CartController = {
       items: orderItems,
       tongTien: finalTotal,
       giamGia: discount,
+      maGiamGia: this.appliedCoupon,
       phuongThucThanhToan: this.selectedPaymentMethod,
       trangThai: "ChoXacNhan"
-    });
+      });
+    } catch (error) {
+      Toast.error("Không thể đặt hàng", error.message || "Vui lòng kiểm tra tồn kho và thử lại.");
+      return;
+    }
+
+    if (this.selectedPaymentMethod === "SPayLater" && finalTotal > 0) {
+      try {
+        await UserService.updateViTraSau(currentUser.id, -finalTotal, newOrder.orderId);
+      } catch (error) {
+        try { await OrderService.cancelOrder(newOrder.orderId, { skipRefund: true }); }
+        catch (cancelError) { console.error("Không thể hoàn tác đơn chưa thanh toán:", cancelError); }
+        Toast.error("Không thể thanh toán", error.message || "Không trừ được hạn mức ví.");
+        return;
+      }
+    }
 
     // 6. Xóa các món đã đặt khỏi giỏ hàng
     this.selectedItems.forEach(id => {

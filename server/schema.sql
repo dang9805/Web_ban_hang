@@ -68,3 +68,9 @@ CREATE TABLE IF NOT EXISTS wallet_refunds (
   amount REAL NOT NULL CHECK (amount > 0),
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) STRICT;
+CREATE TABLE IF NOT EXISTS wallet_charges (
+  order_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id),
+  amount REAL NOT NULL CHECK (amount > 0),
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+) STRICT;

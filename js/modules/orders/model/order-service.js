@@ -20,28 +20,32 @@ const OrderService = {
     return orders.filter(order => order.items.some(item => item.shopId === sellerId));
   },
 
-  createOrder(orderData) {
+  async createOrder(orderData) {
     const orders = this.getAll();
     const newOrder = {
-      orderId: "ORD-" + Date.now().toString().slice(-6),
+      orderId: `ORD-${crypto.randomUUID()}`,
       trangThai: "ChoXacNhan",
       ngayDat: FormatHelper.formatCurrentDateTime(),
       ...orderData
     };
 
     // Trừ số lượng tồn kho của các sản phẩm tương ứng và tăng số lượng đã bán
-    newOrder.items.forEach(item => {
-      const product = ProductService.getById(item.productId);
-      if (product) {
-        ProductService.update(product.id, {
-          soLuongTon: Math.max(0, product.soLuongTon - item.soLuong),
-          daBan: (product.daBan || 0) + item.soLuong
-        });
-      }
+    const products = ProductService.getAll();
+    const nextProducts = products.map(product => {
+      const item = newOrder.items.find(line => line.productId === product.id);
+      if (!item) return product;
+      return { ...product, soLuongTon: Math.max(0, product.soLuongTon - item.soLuong), daBan: (product.daBan || 0) + item.soLuong };
     });
+    if (Storage.remoteConnected) Storage.setLocal("products", nextProducts);
+    else Storage.set("products", nextProducts);
 
     orders.unshift(newOrder);
-    Storage.set("orders", orders);
+    if (!Storage.set("orders", orders)) throw new Error("Không thể lưu đơn hàng.");
+    if (Storage.remoteConnected && !(await Storage.flush())) {
+      const error = new Error(Storage.lastWriteError?.message || "Máy chủ chưa lưu đơn hàng.");
+      await Storage.connectRemote();
+      throw error;
+    }
     return newOrder;
   },
 
@@ -56,7 +60,7 @@ const OrderService = {
     return null;
   },
 
-  async cancelOrder(orderId) {
+  async cancelOrder(orderId, { skipRefund = false } = {}) {
     const order = this.getById(orderId);
     if (!order) return { success: false, message: "Không tìm thấy đơn hàng!" };
 
@@ -65,20 +69,18 @@ const OrderService = {
     }
 
     // Hoàn trả lại số lượng tồn kho và giảm số đã bán
-    order.items.forEach(item => {
-      const product = ProductService.getById(item.productId);
-      if (product) {
-        ProductService.update(product.id, {
-          soLuongTon: product.soLuongTon + item.soLuong,
-          daBan: Math.max(0, (product.daBan || 0) - item.soLuong)
-        });
-      }
+    const nextProducts = ProductService.getAll().map(product => {
+      const item = order.items.find(line => line.productId === product.id);
+      if (!item) return product;
+      return { ...product, soLuongTon: product.soLuongTon + item.soLuong, daBan: Math.max(0, (product.daBan || 0) - item.soLuong) };
     });
+    if (Storage.remoteConnected) Storage.setLocal("products", nextProducts);
+    else Storage.set("products", nextProducts);
 
     // Nếu đơn đã thanh toán bằng ví SpayLater thì hoàn tiền vào ví
     this.updateStatus(orderId, "DaHuy");
     await Storage.flush();
-    if (order.phuongThucThanhToan === "SPayLater") {
+    if (order.phuongThucThanhToan === "SPayLater" && !skipRefund && order.tongTien > 0) {
       await UserService.updateViTraSau(order.buyerId, order.tongTien, order.orderId);
     }
     return { success: true, message: "Đã hủy đơn hàng thành công! Số lượng hàng đã được hoàn lại kho." };

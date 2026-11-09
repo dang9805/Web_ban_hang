@@ -1,4 +1,4 @@
- ==============================================================================
+// ==============================================================================
 // 2. HEADER & MINI-CART CONTROLLER
 // ==============================================================================
 const HeaderController = {
@@ -45,10 +45,9 @@ const HeaderController = {
       if (e.target.closest("#btn-logout")) {
         e.preventDefault();
         UserService.logout();
-        Toast.success("Đã đăng xuất", "Hẹn gặp lại bạn lần sau!");
         setTimeout(() => {
-          window.location.reload();
-        }, 800);
+          window.location.href = "trangchu.html";
+        }, 200);
       }
     });
   },

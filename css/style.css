@@ -382,6 +382,31 @@ table {
 }
 
 /* User Account Trigger */
+.header-user-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.header-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
 .header-user-wrapper {
   position: relative;
 }

@@ -14,7 +14,13 @@ Sàn thương mại điện tử sinh viên, xây dựng bằng HTML/CSS/JavaScr
 3. Chạy `npm start` (hoặc `node server/index.js`).
 4. Mở [http://localhost:3000](http://localhost:3000).
 
+Sau khi cập nhật mã nguồn, dừng tiến trình Node cũ bằng `Ctrl+C` rồi chạy lại `npm start` để nạp API mới.
+
 Lần chạy đầu tiên tự tạo `server/data/edumarket.sqlite` và nạp dữ liệu mẫu. SQLite database nằm trong thư mục bị Git ignore để dữ liệu cá nhân không bị push lên repository. Các tài khoản mẫu có thể xem trong trang Đăng nhập; mật khẩu được băm bằng scrypt.
+
+## Luồng người dùng
+
+Sau khi đăng ký, tài khoản sinh viên dùng chung cho cả mua và bán: người dùng có thể thêm món vào giỏ, đặt đơn, hoặc mở **Kênh Người Bán** từ menu tài khoản để đăng sản phẩm. Cần chạy backend bằng `npm start`; nếu mở frontend trên GitHub Pages mà chưa cấu hình một API Node.js đang chạy, dữ liệu chỉ lưu trên thiết bị và không xuất hiện với người dùng khác.
 
 ## Xác thực và phân quyền
 

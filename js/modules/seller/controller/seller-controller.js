@@ -160,7 +160,7 @@ const SellerController = {
     }
 
     // 2. Lưu sửa nhanh số lượng tồn kho
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", async (e) => {
       const btnSaveStock = e.target.closest(".btn-save-stock");
       if (btnSaveStock) {
         const id = btnSaveStock.dataset.id;
@@ -172,6 +172,13 @@ const SellerController = {
             return;
           }
           ProductService.update(id, { soLuongTon: newQty });
+          if (Storage.remoteConnected && !(await Storage.flush())) {
+            const message = Storage.lastWriteError?.message || "Máy chủ chưa lưu được thay đổi.";
+            await Storage.connectRemote();
+            Toast.error("Không thể cập nhật", message);
+            this.refreshData();
+            return;
+          }
           Toast.success("Đã cập nhật", `Tồn kho sản phẩm đã đổi thành ${newQty} món!`);
           this.refreshData();
         }
@@ -183,6 +190,13 @@ const SellerController = {
         const id = btnDelete.dataset.id;
         if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi sàn bán hàng?")) {
           ProductService.delete(id);
+          if (Storage.remoteConnected && !(await Storage.flush())) {
+            const message = Storage.lastWriteError?.message || "Máy chủ chưa xóa được sản phẩm.";
+            await Storage.connectRemote();
+            Toast.error("Không thể xóa", message);
+            this.refreshData();
+            return;
+          }
           Toast.info("Đã xóa", "Sản phẩm đã được gỡ khỏi sàn!");
           this.refreshData();
         }
@@ -195,6 +209,13 @@ const SellerController = {
         const targetStatus = btnAdvance.dataset.target;
         
         OrderService.updateStatus(orderId, targetStatus);
+        if (Storage.remoteConnected && !(await Storage.flush())) {
+          const message = Storage.lastWriteError?.message || "Máy chủ chưa cập nhật được đơn hàng.";
+          await Storage.connectRemote();
+          Toast.error("Không thể cập nhật đơn", message);
+          this.refreshData();
+          return;
+        }
         
         const statusNames = {
           DangChuanBi: "Shop đang chuẩn bị hàng",
