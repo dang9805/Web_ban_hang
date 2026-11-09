@@ -10,11 +10,13 @@ const UserService = {
 
   setCurrentUser(user) {
     Storage.set("currentUser", user);
+    localStorage.setItem("edumarket-authenticated", "1");
     return true;
   },
 
   logout() {
     Storage.remove("currentUser");
+    localStorage.removeItem("edumarket-authenticated");
     return true;
   },
 

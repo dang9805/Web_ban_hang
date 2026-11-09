@@ -68,10 +68,6 @@ const Storage = {
       products: MOCK_PRODUCTS,
       categories: MOCK_CATEGORIES,
       users: MOCK_USERS,
-      currentUser: (() => {
-        const { password, ...user } = MOCK_USERS[0];
-        return user;
-      })(),
       cart: MOCK_CART,
       orders: MOCK_ORDERS,
       reviews: MOCK_REVIEWS,
