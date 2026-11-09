@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ Hàng & Thanh Toán - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cart.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên</a>
+          <span class="header-topbar-divider"></span>
+          <a href="trangchu.html"><i class="fa-solid fa-house"></i> Về Trang Chủ</a>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-regular fa-circle-question"></i> Trợ Giúp</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <div class="d-flex align-center gap-4">
+          <a href="trangchu.html" class="header-logo">
+            <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+            <div class="header-logo-text">
+              <span class="header-logo-title">EduMarket</span>
+              <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+            </div>
+          </a>
+          <span
+            style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); border-left: 2px solid var(--border-color); padding-left: 16px;">
+            Giỏ Hàng & Đặt Hàng
+          </span>
+        </div>
+
+        <div class="header-search-wrapper" style="max-width: 450px;">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input"
+              placeholder="Tìm thêm sản phẩm vào giỏ...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+          <div class="header-mini-cart d-none"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container">
+
+      <!-- Thông báo ưu đãi -->
+      <div class="cart-header-banner">
+        <i class="fa-solid fa-graduation-cap" style="font-size: 1.3rem;"></i>
+        <span>Nhập <b>Mã số sinh viên (MSSV)</b> của bạn tại ô giảm giá để nhận ngay ưu đãi giảm 20.000 đ vào đơn
+          hàng!</span>
+      </div>
+
+      <!-- BẢNG DANH SÁCH SẢN PHẨM TRONG GIỎ -->
+      <section class="cart-table-card">
+        <div class="cart-table-head">
+          <div>
+            <input type="checkbox" id="select-all-cart" class="cart-checkbox" title="Chọn tất cả">
+          </div>
+          <div>Món Đồ</div>
+          <div>Đơn Giá</div>
+          <div>Số Lượng</div>
+          <div>Thành Tiền</div>
+          <div>Xóa</div>
+        </div>
+
+        <div id="cart-items-container"></div>
+
+        <div id="cart-empty-state" class="empty-state d-none">
+          <i class="fa-solid fa-cart-arrow-down empty-state-icon"></i>
+          <div class="empty-state-title">Giỏ hàng của bạn đang trống</div>
+          <p class="empty-state-desc">Hãy dạo quanh sàn sinh viên để tìm kiếm sách vở, giáo trình và đồ dùng phòng trọ
+            nhé!</p>
+          <a href="danhsachsanpham.html" class="btn btn-primary">Khám Phá Sản Phẩm</a>
+        </div>
+      </section>
+
+      <!-- KHU VỰC ĐẶT HÀNG -->
+      <div id="checkout-section" class="checkout-layout">
+
+        <div>
+          <!-- THÔNG TIN GIAO NHẬN -->
+          <div class="checkout-box">
+            <h3 class="checkout-section-title">
+              <i class="fa-solid fa-location-dot"></i> Thông Tin Người Nhận
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Họ và tên người nhận *</label>
+              <input type="text" id="checkout-name" class="form-input" placeholder="Ví dụ: Nguyễn Văn An">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số điện thoại liên hệ *</label>
+              <input type="text" id="checkout-phone" class="form-input" placeholder="Ví dụ: 0987654321">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Địa chỉ nhận đồ (Phòng KTX / Nhà trọ) *</label>
+              <input type="text" id="checkout-address" class="form-input"
+                placeholder="Ví dụ: Phòng 402 KTX Khu B hoặc Số 15 ngõ 12...">
+            </div>
+          </div>
+
+          <!-- MÃ GIẢM GIÁ / MSSV -->
+          <div class="checkout-box">
+            <h3 class="checkout-section-title">
+              <i class="fa-solid fa-ticket"></i> Mã Giảm Giá Sinh Viên
+            </h3>
+            <div class="coupon-input-group">
+              <input type="text" id="coupon-code-input" class="form-input"
+                placeholder="Nhập MSSV (VD: 20210001) hoặc SINHVIEN2026">
+              <button type="button" id="btn-apply-coupon" class="btn btn-apply-coupon">Áp Dụng</button>
+            </div>
+            <div>
+              <span class="coupon-hint-badge">
+                <i class="fa-solid fa-circle-info"></i> Nhập MSSV của bạn để được trừ 20.000 đ
+              </span>
+            </div>
+          </div>
+
+          <!-- PHƯƠNG THỨC THANH TOÁN -->
+          <div class="checkout-box">
+            <h3 class="checkout-section-title">
+              <i class="fa-solid fa-credit-card"></i> Phương Thức Thanh Toán
+            </h3>
+            <div class="payment-methods-list">
+              <label class="payment-method-card active" data-method="COD">
+                <input type="radio" name="paymentMethod" value="COD" class="payment-radio" checked>
+                <div class="payment-icon text-success"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div class="payment-details">
+                  <div class="payment-name">Thanh toán khi nhận hàng (COD)</div>
+                  <div class="payment-sub">Trả tiền mặt trực tiếp khi nhận được đồ</div>
+                </div>
+              </label>
+
+              <label class="payment-method-card" data-method="QR">
+                <input type="radio" name="paymentMethod" value="QR" class="payment-radio">
+                <div class="payment-icon text-primary"><i class="fa-solid fa-qrcode"></i></div>
+                <div class="payment-details">
+                  <div class="payment-name">Chuyển khoản VietQR qua Banking / MoMo</div>
+                  <div class="payment-sub">Mở mã QR có sẵn số tiền để quét nhanh chóng</div>
+                </div>
+              </label>
+
+              <label class="payment-method-card" data-method="SPayLater">
+                <input type="radio" name="paymentMethod" value="SPayLater" class="payment-radio">
+                <div class="payment-icon text-warning"><i class="fa-solid fa-wallet"></i></div>
+                <div class="payment-details">
+                  <div class="payment-name">Ví trả sau sinh viên (SPayLater)</div>
+                  <div id="spaylater-balance-text" class="payment-sub text-primary fw-medium">
+                    Hạn mức khả dụng: 500.000 đ
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- TÓM TẮT ĐƠN HÀNG -->
+        <div>
+          <div class="checkout-box" style="position: sticky; top: 120px;">
+            <h3 class="checkout-section-title">
+              <i class="fa-solid fa-receipt"></i> Tóm Tắt Thanh Toán
+            </h3>
+
+            <div class="order-summary-row">
+              <span>Món hàng đã chọn:</span>
+              <span id="selected-items-count" class="fw-semibold text-main">0 món</span>
+            </div>
+
+            <div class="order-summary-row">
+              <span>Tổng tiền hàng:</span>
+              <span id="summary-subtotal" class="fw-semibold text-main">0 đ</span>
+            </div>
+
+            <div class="order-summary-row">
+              <span>Giảm giá MSSV:</span>
+              <span id="summary-discount" class="text-success fw-semibold">-0 đ</span>
+            </div>
+
+            <div class="order-summary-row">
+              <span>Phí vận chuyển:</span>
+              <span class="text-success fw-semibold">Miễn phí KTX</span>
+            </div>
+
+            <div class="order-summary-row order-summary-total">
+              <span>Tổng thanh toán:</span>
+              <span id="summary-final-total">0 đ</span>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <button type="button" id="btn-submit-order" class="btn btn-primary btn-block btn-lg">
+                <i class="fa-solid fa-check"></i> XÁC NHẬN ĐẶT HÀNG
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL POPUP VIETQR -->
+  <div id="qr-payment-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-qrcode text-primary"></i> Quét Mã VietQR</div>
+        <div id="btn-close-qr-modal" class="modal-close"><i class="fa-solid fa-xmark"></i></div>
+      </div>
+      <div class="modal-body qr-modal-body">
+        <p class="text-muted mb-3" style="font-size: 0.88rem;">
+          Quét mã bằng ứng dụng Ngân hàng hoặc MoMo để chuyển khoản:
+        </p>
+        <img id="vietqr-image" src="" alt="Mã VietQR" class="qr-code-img">
+        <div class="qr-info-box">
+          <div class="mb-1"><b>Ngân hàng:</b> MB Bank (Ngân hàng Quân Đội)</div>
+          <div class="mb-1"><b>Tên tài khoản:</b> EDUMARKET SINH VIEN</div>
+          <div class="mb-1"><b>Số tiền:</b> <span id="qr-transfer-amount" class="text-primary fw-bold">0 đ</span></div>
+          <div><b>Nội dung:</b> <span id="qr-transfer-content" class="text-danger fw-bold">EDUSHOP SV2026</span></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-confirm-qr-paid" class="btn btn-primary">
+          <i class="fa-solid fa-check"></i> Xác Nhận Đã Chuyển Tiền
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/cart/view/cart-view.js"></script>
+  <script src="js/modules/cart/controller/cart-controller.js"></script>
+</body>
+
+</html>

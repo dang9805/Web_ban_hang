@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh Sách Sản Phẩm - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/product.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên</a>
+          <span class="header-topbar-divider"></span>
+          <span><i class="fa-solid fa-graduation-cap"></i> Cổng mua bán đồ dùng sinh viên</span>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-regular fa-circle-question"></i> Trợ Giúp</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <a href="trangchu.html" class="header-logo">
+          <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+          <div class="header-logo-text">
+            <span class="header-logo-title">EduMarket</span>
+            <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+          </div>
+        </a>
+
+        <div class="header-search-wrapper">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input" placeholder="Tìm kiếm giáo trình, máy tính Casio, bàn học, balo...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+
+          <div class="header-mini-cart">
+            <div class="mini-cart-header">Món đồ vừa thêm</div>
+            <div id="mini-cart-items" class="mini-cart-list"></div>
+            <div id="mini-cart-footer" class="mini-cart-footer">
+              <span id="mini-cart-count-text" class="text-muted" style="font-size: 0.85rem;">0 món</span>
+              <a href="giohang.html" class="btn btn-sm btn-primary">Xem Giỏ Hàng</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container">
+      
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb-wrap">
+        <ul class="breadcrumb-list">
+          <li class="breadcrumb-item"><a href="trangchu.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+          <li class="breadcrumb-separator"><i class="fa-solid fa-angle-right"></i></li>
+          <li class="breadcrumb-item active">Danh sách sản phẩm</li>
+        </ul>
+      </nav>
+
+      <!-- CATALOG LAYOUT 2 CỘT -->
+      <div class="catalog-layout">
+        
+        <!-- CỘT TRÁI: BỘ LỌC -->
+        <aside class="catalog-sidebar">
+          <div class="sidebar-title">
+            <i class="fa-solid fa-filter text-primary"></i> Bộ Lọc Tìm Kiếm
+          </div>
+
+          <!-- Theo Danh mục -->
+          <div class="filter-group">
+            <div class="filter-heading">Theo Danh Mục</div>
+            <div id="category-filter-list" class="category-filter-list">
+              <!-- Render tự động bởi JS -->
+            </div>
+          </div>
+
+          <!-- Theo Khoảng giá -->
+          <div class="filter-group">
+            <div class="filter-heading">Khoảng Giá (VNĐ)</div>
+            <div class="price-filter-inputs">
+              <input type="number" id="filter-min-price" class="price-input" placeholder="Từ" min="0">
+              <span class="text-muted">-</span>
+              <input type="number" id="filter-max-price" class="price-input" placeholder="Đến" min="0">
+            </div>
+            <button type="button" id="btn-apply-price" class="btn btn-primary btn-block btn-sm">Áp Dụng</button>
+          </div>
+
+          <!-- Xóa lọc -->
+          <div>
+            <button type="button" id="btn-reset-filter" class="btn btn-light btn-block btn-sm">
+              <i class="fa-solid fa-rotate-left"></i> Xóa tất cả bộ lọc
+            </button>
+          </div>
+        </aside>
+
+        <!-- CỘT PHẢI: SORTBAR & GRID SẢN PHẨM -->
+        <section class="catalog-main">
+          <div class="catalog-sortbar">
+            <div class="sortbar-left">
+              <span class="sortbar-label">Sắp xếp:</span>
+              <button type="button" class="sort-btn active" data-sort="popular">Phổ biến</button>
+              <button type="button" class="sort-btn" data-sort="newest">Mới nhất</button>
+              <button type="button" class="sort-btn" data-sort="bestseller">Bán chạy</button>
+              
+              <select id="sort-price-select" class="sort-select">
+                <option value="">Giá: Mặc định</option>
+                <option value="price-asc">Giá: Thấp đến Cao</option>
+                <option value="price-desc">Giá: Cao đến Thấp</option>
+              </select>
+            </div>
+
+            <div id="catalog-result-count" class="text-muted" style="font-size: 0.88rem;">
+              Đang tải kết quả...
+            </div>
+          </div>
+
+          <!-- Lưới sản phẩm -->
+          <div id="catalog-grid" class="catalog-product-grid"></div>
+
+          <!-- Trạng thái không có kết quả -->
+          <div id="catalog-empty" class="empty-state d-none">
+            <i class="fa-solid fa-magnifying-glass empty-state-icon"></i>
+            <div class="empty-state-title">Không tìm thấy sản phẩm phù hợp</div>
+            <p class="empty-state-desc">Hãy thử tìm với từ khóa khác hoặc xóa bớt tiêu chí khoảng giá.</p>
+          </div>
+
+          <!-- Phân trang -->
+          <div id="catalog-pagination" class="pagination"></div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/catalog/view/catalog-view.js"></script>
+  <script src="js/modules/catalog/controller/catalog-controller.js"></script>
+</body>
+</html>

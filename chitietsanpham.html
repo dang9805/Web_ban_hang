@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Sản Phẩm - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/product.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên</a>
+          <span class="header-topbar-divider"></span>
+          <a href="trangchu.html"><i class="fa-solid fa-house"></i> Trang Chủ</a>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-regular fa-circle-question"></i> Trợ Giúp</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <a href="trangchu.html" class="header-logo">
+          <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+          <div class="header-logo-text">
+            <span class="header-logo-title">EduMarket</span>
+            <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+          </div>
+        </a>
+
+        <div class="header-search-wrapper">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input" placeholder="Tìm kiếm trên sàn sinh viên...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+
+          <div class="header-mini-cart">
+            <div class="mini-cart-header">Món đồ vừa thêm</div>
+            <div id="mini-cart-items" class="mini-cart-list"></div>
+            <div id="mini-cart-footer" class="mini-cart-footer">
+              <span id="mini-cart-count-text" class="text-muted" style="font-size: 0.85rem;">0 món</span>
+              <a href="giohang.html" class="btn btn-sm btn-primary">Xem Giỏ Hàng</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container">
+      
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb-wrap">
+        <ul class="breadcrumb-list">
+          <li class="breadcrumb-item"><a href="trangchu.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+          <li class="breadcrumb-separator"><i class="fa-solid fa-angle-right"></i></li>
+          <li class="breadcrumb-item"><a id="breadcrumb-category" href="danhsachsanpham.html">Danh mục</a></li>
+          <li class="breadcrumb-separator"><i class="fa-solid fa-angle-right"></i></li>
+          <li id="breadcrumb-title" class="breadcrumb-item active">Tên sản phẩm</li>
+        </ul>
+      </nav>
+
+      <div id="product-detail-container" class="product-detail-wrapper">
+        
+        <!-- NỬA TRÊN: HERO BOX (GALLERY + THÔNG TIN MUA HÀNG) -->
+        <section class="product-hero-box">
+          <!-- Cột Gallery ảnh -->
+          <div class="product-gallery">
+            <div id="gallery-main-container" class="product-gallery-main">
+              <!-- Render bởi JS -->
+            </div>
+            <div id="gallery-thumbs-container" class="product-gallery-thumbs">
+              <!-- Render thumbnail -->
+            </div>
+
+            <div class="product-social-share">
+              <div class="d-flex align-center gap-2 text-muted" style="font-size: 0.85rem;">
+                <span>Chia sẻ đồ này:</span>
+                <a href="#" class="text-primary"><i class="fa-brands fa-facebook-messenger"></i></a>
+                <a href="#" class="text-primary"><i class="fa-brands fa-facebook"></i></a>
+              </div>
+
+              <!-- Nút Thả tim Wishlist -->
+              <div id="btn-wishlist-toggle" class="btn-wishlist-toggle">
+                <i class="fa-regular fa-heart"></i>
+                <span>Lưu tin</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cột thông tin chi tiết mua hàng -->
+          <div class="product-hero-info">
+            <div class="product-hero-badge-title">
+              <h1 id="detail-product-title" class="product-hero-title">Đang tải...</h1>
+            </div>
+
+            <div class="product-hero-submeta">
+              <div class="d-flex align-center gap-1">
+                <span id="detail-rating-score" class="hero-meta-rating">5.0</span>
+                <div class="hero-meta-stars">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                </div>
+              </div>
+              <span class="text-muted">|</span>
+              <div>
+                <span id="detail-review-count" class="fw-semibold text-main">0</span>
+                <span class="text-muted"> Đánh giá</span>
+              </div>
+              <span class="text-muted">|</span>
+              <div class="hero-meta-sold">
+                <span>Đã bán: </span>
+                <span id="detail-sold-count" class="fw-semibold text-main">0</span>
+              </div>
+            </div>
+
+            <!-- Khung giá màu xanh thanh lịch -->
+            <div class="product-price-box">
+              <span id="detail-price-current" class="product-price-current">0 đ</span>
+              <span id="detail-price-original" class="product-price-original">0 đ</span>
+              <span id="detail-discount-pill" class="product-discount-pill">-0%</span>
+            </div>
+
+            <!-- Ưu đãi & Vận chuyển -->
+            <div class="product-perk-row">
+              <div class="perk-label">Vận Chuyển</div>
+              <div class="perk-content">
+                <div class="d-flex align-center gap-2 mb-1">
+                  <i class="fa-solid fa-truck-fast text-success"></i>
+                  <span>Hỗ trợ giao nhanh trong khuôn viên KTX / Trường</span>
+                </div>
+                <div class="text-muted" style="font-size: 0.85rem;">Phí ship 0đ hoặc thỏa thuận trực tiếp với người bán</div>
+              </div>
+            </div>
+
+            <div class="product-perk-row">
+              <div class="perk-label">Thanh Toán</div>
+              <div class="perk-content">Hỗ trợ Tiền mặt COD, Mã VietQR hoặc Ví trả sau SPayLater</div>
+            </div>
+
+            <!-- Bộ chọn số lượng -->
+            <div class="product-quantity-row">
+              <div class="perk-label">Số Lượng</div>
+              <div class="d-flex align-center">
+                <div class="quantity-controller">
+                  <button type="button" id="btn-qty-minus" class="quantity-btn">-</button>
+                  <input type="text" id="product-quantity-input" class="quantity-input" value="1">
+                  <button type="button" id="btn-qty-plus" class="quantity-btn">+</button>
+                </div>
+                <span id="detail-stock-count" class="stock-status-text">0 sản phẩm có sẵn</span>
+              </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="product-action-buttons">
+              <button type="button" id="btn-add-to-cart" class="btn-add-to-cart">
+                <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ
+              </button>
+              <button type="button" id="btn-buy-now" class="btn btn-buy-now">
+                Mua Ngay
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- KHUNG THÔNG TIN NGƯỜI BÁN (SHOP) -->
+        <section class="shop-info-card">
+          <div class="shop-info-left">
+            <img class="shop-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" alt="Avatar Shop">
+            <div>
+              <div id="shop-name" class="shop-name-title">Cửa Hàng Sinh Viên</div>
+              <div id="shop-location" class="shop-badge-online">Ký túc xá Đại học Quốc gia</div>
+            </div>
+          </div>
+
+          <div>
+            <a id="btn-view-shop" href="danhsachsanpham.html" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-store"></i> Xem Gian Hàng
+            </a>
+          </div>
+        </section>
+
+        <!-- NỬA DƯỚI: THÔNG SỐ, MÔ TẢ & ĐÁNH GIÁ -->
+        <div class="product-bottom-layout">
+          
+          <div class="product-bottom-main">
+            <!-- 1. BẢNG THÔNG SỐ -->
+            <div class="product-specs-box">
+              <div class="detail-section-title">
+                <i class="fa-solid fa-circle-info text-primary"></i> Thông Tin Chi Tiết
+              </div>
+              <table class="specs-table">
+                <tbody id="specs-table-body"></tbody>
+              </table>
+            </div>
+
+            <!-- 2. MÔ TẢ -->
+            <div class="product-desc-box">
+              <div class="detail-section-title">
+                <i class="fa-solid fa-align-left text-primary"></i> Mô Tả Hàng Hóa
+              </div>
+              <div id="product-description-text" class="product-desc-content"></div>
+            </div>
+
+            <!-- 3. ĐÁNH GIÁ (REVIEWS) -->
+            <div class="product-reviews-box">
+              <div class="detail-section-title">
+                <i class="fa-solid fa-star text-warning"></i> Đánh Giá Từ Sinh Viên Khác
+              </div>
+
+              <!-- Tổng quan điểm số và bộ lọc sao -->
+              <div class="rating-overview-box">
+                <div>
+                  <div class="d-flex align-baseline gap-2">
+                    <span id="review-overview-score" class="rating-score-num">5.0</span>
+                    <span class="text-primary fw-semibold">/ 5 sao</span>
+                  </div>
+                  <div class="rating-score-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                  </div>
+                </div>
+
+                <div class="rating-filter-pills">
+                  <button type="button" class="review-filter-btn active" data-star="0">Tất Cả</button>
+                  <button type="button" class="review-filter-btn" data-star="5">5 ⭐</button>
+                  <button type="button" class="review-filter-btn" data-star="4">4 ⭐</button>
+                  <button type="button" class="review-filter-btn" data-star="3">3 ⭐</button>
+                  <button type="button" class="review-filter-btn" data-star="2">2 ⭐</button>
+                  <button type="button" class="review-filter-btn" data-star="1">1 ⭐</button>
+                </div>
+              </div>
+
+              <!-- Form gửi review -->
+              <div class="write-review-box">
+                <div class="fw-semibold text-main mb-1">
+                  <i class="fa-solid fa-pen-to-square text-primary"></i> Viết nhận xét của bạn:
+                </div>
+                
+                <div id="star-rating-picker" class="star-rating-select">
+                  <i class="fa-solid fa-star active" data-val="1"></i>
+                  <i class="fa-solid fa-star active" data-val="2"></i>
+                  <i class="fa-solid fa-star active" data-val="3"></i>
+                  <i class="fa-solid fa-star active" data-val="4"></i>
+                  <i class="fa-solid fa-star active" data-val="5"></i>
+                </div>
+
+                <textarea id="review-comment-input" class="review-textarea" placeholder="Chia sẻ cảm nhận về món đồ (chất lượng sách, mực viết, thời lượng pin, độ mới)..."></textarea>
+                
+                <div class="text-right">
+                  <button type="button" id="btn-submit-review" class="btn btn-primary btn-sm">
+                    <i class="fa-regular fa-paper-plane"></i> Gửi Đánh Giá
+                  </button>
+                </div>
+              </div>
+
+              <!-- Danh sách bình luận -->
+              <div id="reviews-list-container"></div>
+            </div>
+          </div>
+
+          <!-- CỘT PHỤ BÊN PHẢI -->
+          <aside class="top-products-sidebar">
+            <div class="top-products-title">Gợi Ý Thêm Cho Bạn</div>
+            <div id="top-products-list" class="top-products-list"></div>
+          </aside>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/product-detail/view/product-detail-view.js"></script>
+  <script src="js/modules/product-detail/controller/product-detail-controller.js"></script>
+</body>
+</html>

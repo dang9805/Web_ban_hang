@@ -1,0 +1,538 @@
+/* ==========================================================================
+   EDUMARKET - CART, CHECKOUT & ORDERS STYLESHEET (css/cart.css)
+   Phong cách: Tối giản, Hiện đại, Tone Xanh (Clean Blue Cart & Checkout)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CART PAGE (giohang.html)
+   -------------------------------------------------------------------------- */
+.cart-header-banner {
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary-soft);
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  color: var(--color-primary);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.cart-table-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.cart-table-head {
+  display: grid;
+  grid-template-columns: 50px 3fr 1.5fr 1.5fr 1.5fr 80px;
+  padding: 14px 20px;
+  background-color: var(--bg-body);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.cart-item-row {
+  display: grid;
+  grid-template-columns: 50px 3fr 1.5fr 1.5fr 1.5fr 80px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-light);
+  align-items: center;
+  transition: background-color var(--transition-fast);
+}
+
+.cart-item-row:hover {
+  background-color: #fafbfc;
+}
+
+.cart-checkbox {
+  accent-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.cart-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cart-item-thumb {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.cart-item-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+.cart-item-title:hover {
+  color: var(--color-primary);
+}
+
+.cart-price-cell {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.cart-total-cell {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.cart-action-cell {
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  font-size: 0.88rem;
+}
+
+.cart-action-cell:hover {
+  color: var(--color-danger);
+}
+
+/* --------------------------------------------------------------------------
+   2. CHECKOUT & COUPON SECTION
+   -------------------------------------------------------------------------- */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+.checkout-box {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+}
+
+.checkout-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.checkout-section-title i {
+  color: var(--color-primary);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  border: 1.5px solid var(--border-dark);
+  border-radius: var(--radius-xs);
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  background: #ffffff;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Coupon */
+.coupon-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.btn-apply-coupon {
+  background: var(--color-primary);
+  color: #ffffff;
+  padding: 0 20px;
+  border-radius: var(--radius-xs);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btn-apply-coupon:hover {
+  background: var(--color-primary-hover);
+}
+
+.coupon-hint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* Thanh toán */
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method-card {
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.payment-method-card:hover {
+  border-color: var(--color-primary-soft);
+  background: var(--color-primary-light);
+}
+
+.payment-method-card.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.payment-radio {
+  accent-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+}
+
+.payment-icon {
+  font-size: 1.4rem;
+  width: 32px;
+  text-align: center;
+}
+
+.payment-details {
+  flex: 1;
+}
+
+.payment-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.payment-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Tóm tắt đơn hàng */
+.order-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.order-summary-total {
+  border-top: 1.5px solid var(--border-color);
+  padding-top: 16px;
+  margin-top: 12px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* Modal QR */
+.qr-modal-body {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-code-img {
+  width: 220px;
+  height: 220px;
+  margin: 0 auto 16px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+}
+
+.qr-info-box {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  padding: 14px 18px;
+  border-radius: var(--radius-xs);
+  font-size: 0.9rem;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   3. ORDERS TRACKING & TIMELINE (donmua.html)
+   -------------------------------------------------------------------------- */
+.orders-page-wrapper {
+  margin: 20px 0 60px;
+}
+
+.orders-nav-tabs {
+  display: flex;
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 25px;
+  overflow-x: auto;
+}
+
+.order-tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 15px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.order-tab-item:hover {
+  color: var(--color-primary);
+}
+
+.order-tab-item.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* Thẻ đơn hàng (Order Card) */
+.order-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 26px;
+  margin-bottom: 22px;
+}
+
+.order-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 20px;
+}
+
+.order-id-code {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-main);
+}
+
+/* TIMELINE VẬN CHUYỂN */
+.order-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 25px 20px 35px;
+}
+
+.order-timeline::before {
+  content: "";
+  position: absolute;
+  top: 19px;
+  left: 40px;
+  right: 40px;
+  height: 3px;
+  background-color: var(--border-color);
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 130px;
+}
+
+.timeline-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--border-dark);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  transition: all var(--transition-normal);
+}
+
+.timeline-step-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.timeline-step.completed .timeline-icon-box {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #ffffff;
+}
+
+.timeline-step.completed .timeline-step-text {
+  color: var(--color-success);
+}
+
+.timeline-step.active .timeline-icon-box {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+.timeline-step.active .timeline-step-text {
+  color: var(--color-primary);
+}
+
+.order-cancelled-notice {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  padding: 12px 18px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* Danh sách món hàng trong đơn */
+.order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.order-item-single {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.order-item-img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+}
+
+.order-item-info {
+  flex: 1;
+}
+
+.order-item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.order-total-price {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-table-head {
+    display: none;
+  }
+
+  .cart-item-row {
+    grid-template-columns: 40px 1fr 80px;
+    grid-template-areas:
+      "check prod act"
+      "check price total";
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-timeline {
+    margin: 15px 0 25px;
+  }
+  
+  .timeline-step {
+    width: 80px;
+  }
+
+  .timeline-step-text {
+    font-size: 0.74rem;
+  }
+}

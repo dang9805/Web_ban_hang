@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Món Đồ Đã Lưu - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    .wishlist-card-wrap {
+      position: relative;
+    }
+    .btn-remove-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-danger);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.2s;
+    }
+    .btn-remove-wishlist:hover {
+      transform: scale(1.15);
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên</a>
+          <span class="header-topbar-divider"></span>
+          <a href="trangchu.html"><i class="fa-solid fa-house"></i> Về Trang Chủ</a>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-regular fa-circle-question"></i> Trợ Giúp</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <div class="d-flex align-center gap-4">
+          <a href="trangchu.html" class="header-logo">
+            <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+            <div class="header-logo-text">
+              <span class="header-logo-title">EduMarket</span>
+              <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+            </div>
+          </a>
+          <span style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); border-left: 2px solid var(--border-color); padding-left: 16px;">
+            Món Đồ Đã Lưu (Yêu Thích)
+          </span>
+        </div>
+
+        <div class="header-search-wrapper" style="max-width: 450px;">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input" placeholder="Tìm sản phẩm trên sàn...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+          <div class="header-mini-cart d-none"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container py-4">
+      
+      <nav class="breadcrumb-wrap">
+        <ul class="breadcrumb-list">
+          <li class="breadcrumb-item"><a href="trangchu.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+          <li class="breadcrumb-separator"><i class="fa-solid fa-angle-right"></i></li>
+          <li class="breadcrumb-item active">Danh sách đã lưu</li>
+        </ul>
+      </nav>
+
+      <div class="section-wrapper" style="padding: 24px;">
+        <div class="d-flex align-center justify-between mb-4 pb-3" style="border-bottom: 1.5px solid var(--border-color);">
+          <h2 class="section-title">
+            <i class="fa-solid fa-heart text-danger"></i> CÁC MÓN ĐỒ BẠN ĐÃ LƯU LẠI
+          </h2>
+          <span id="wishlist-count-badge" class="badge" style="background: var(--color-primary-light); color: var(--color-primary); font-size: 0.85rem; padding: 4px 12px;">
+            0 món
+          </span>
+        </div>
+
+        <div id="wishlist-grid" class="product-grid" style="padding: 0;"></div>
+
+        <div id="wishlist-empty" class="empty-state d-none">
+          <i class="fa-regular fa-heart empty-state-icon"></i>
+          <div class="empty-state-title">Chưa có món đồ nào được lưu</div>
+          <p class="empty-state-desc">Hãy bấm vào biểu tượng trái tim ở từng sản phẩm để lưu lại khi cần mua nhé!</p>
+          <a href="danhsachsanpham.html" class="btn btn-primary">Khám Phá Ngay</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/wishlist/view/wishlist-view.js"></script>
+  <script src="js/modules/wishlist/controller/wishlist-controller.js"></script>
+</body>
+</html>

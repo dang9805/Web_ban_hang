@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sơ Đồ Trang Web (Sitemap) - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .sitemap-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 30px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 25px;
+    }
+    .sitemap-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--color-primary-light);
+      padding-bottom: 12px;
+    }
+    .tree-group {
+      margin-bottom: 25px;
+    }
+    .tree-group-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tree-list {
+      list-style: none;
+      padding-left: 20px;
+      border-left: 2px dashed var(--border-dark);
+    }
+    .tree-item {
+      position: relative;
+      padding: 10px 0 10px 25px;
+    }
+    .tree-item::before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 0;
+      width: 18px;
+      height: 2px;
+      background: var(--border-dark);
+    }
+    .tree-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    .tree-link:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateX(4px);
+    }
+    .tree-desc {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán</a>
+          <span class="header-topbar-divider"></span>
+          <a href="trangchu.html"><i class="fa-solid fa-house"></i> Về Trang Chủ</a>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-solid fa-users"></i> Giới Thiệu Nhóm</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <div class="d-flex align-center gap-4">
+          <a href="trangchu.html" class="header-logo">
+            <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+            <div class="header-logo-text">
+              <span class="header-logo-title">EduMarket</span>
+              <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+            </div>
+          </a>
+          <span style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); border-left: 2px solid var(--border-color); padding-left: 16px;">
+            Sơ Đồ Liên Kết Hệ Thống (Sitemap)
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container py-4">
+      
+      <section class="sitemap-card">
+        <h1 class="sitemap-title">
+          <i class="fa-solid fa-sitemap"></i> CẤU TRÚC HỆ THỐNG TRANG WEB EDUMARKET
+        </h1>
+        <p class="text-muted mb-4" style="font-size: 0.95rem;">
+          Nhấp vào bất kỳ nút liên kết nào dưới đây để truy cập trực tiếp các trang chức năng trong hệ thống:
+        </p>
+
+        <!-- NHÓM 1: MUA SẮM KHÁCH HÀNG -->
+        <div class="tree-group">
+          <div class="tree-group-title text-primary">
+            <i class="fa-solid fa-cart-shopping"></i> 1. Khu Vực Mua Sắm & Khách Hàng
+          </div>
+          <ul class="tree-list">
+            <li class="tree-item">
+              <a href="trangchu.html" class="tree-link">
+                <i class="fa-solid fa-house text-primary"></i>
+                <div>
+                  trangchu.html (Trang Chủ)
+                  <span class="tree-desc">Banner giới thiệu sinh viên, danh mục hàng hóa, danh sách sản phẩm đang bán</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="danhsachsanpham.html" class="tree-link">
+                <i class="fa-solid fa-list text-primary"></i>
+                <div>
+                  danhsachsanpham.html (Danh Sách & Bộ Lọc)
+                  <span class="tree-desc">Lọc danh mục checkbox, khoảng giá từ-đến, sắp xếp giá/bán chạy/mới nhất, tìm kiếm từ khóa</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="chitietsanpham.html?id=SP01" class="tree-link">
+                <i class="fa-solid fa-circle-info text-primary"></i>
+                <div>
+                  chitietsanpham.html (Chi Tiết Sản Phẩm)
+                  <span class="tree-desc">Gallery ảnh, tồn kho, chọn số lượng, thêm giỏ, thông số kỹ thuật, đánh giá sao</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="giohang.html" class="tree-link">
+                <i class="fa-solid fa-basket-shopping text-primary"></i>
+                <div>
+                  giohang.html (Giỏ Hàng & Đặt Hàng)
+                  <span class="tree-desc">Quản lý số lượng món đồ, voucher MSSV, thanh toán COD / VietQR / SPayLater</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="donmua.html" class="tree-link">
+                <i class="fa-solid fa-truck-fast text-primary"></i>
+                <div>
+                  donmua.html (Theo Dõi Đơn Mua)
+                  <span class="tree-desc">Thanh lộ trình tiến trình vận chuyển (Timeline 4 bước), hủy đơn tự hoàn tồn kho</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="yeuthich.html" class="tree-link">
+                <i class="fa-solid fa-heart text-danger"></i>
+                <div>
+                  yeuthich.html (Món Đồ Đã Lưu)
+                  <span class="tree-desc">Danh sách các món hàng đã bấm thả tim</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- NHÓM 2: KÊNH NGƯỜI BÁN -->
+        <div class="tree-group">
+          <div class="tree-group-title text-success">
+            <i class="fa-solid fa-store"></i> 2. Kênh Người Bán Sinh Viên
+          </div>
+          <ul class="tree-list">
+            <li class="tree-item">
+              <a href="kenhnguoiban.html" class="tree-link">
+                <i class="fa-solid fa-chart-line text-success"></i>
+                <div>
+                  kenhnguoiban.html (Kênh Người Bán)
+                  <span class="tree-desc">Dashboard 4 chỉ số KPI, form đăng bán món mới, chỉnh sửa tồn kho tại chỗ, duyệt đơn hàng bán</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- NHÓM 3: XÁC THỰC TÀI KHOẢN -->
+        <div class="tree-group">
+          <div class="tree-group-title text-warning">
+            <i class="fa-solid fa-user-lock"></i> 3. Phân Hệ Xác Thực
+          </div>
+          <ul class="tree-list">
+            <li class="tree-item">
+              <a href="dangky.html" class="tree-link">
+                <i class="fa-solid fa-user-plus text-warning"></i>
+                <div>
+                  dangky.html (Đăng Ký Tài Khoản)
+                  <span class="tree-desc">Regex validate: Email, Số điện thoại 10 số, Mã sinh viên MSSV, Mật khẩu</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="dangnhap.html" class="tree-link">
+                <i class="fa-solid fa-right-to-bracket text-warning"></i>
+                <div>
+                  dangnhap.html (Đăng Nhập)
+                  <span class="tree-desc">Đăng nhập tài khoản sinh viên, có gợi ý tài khoản mẫu bấm vào điền ngay</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- NHÓM 4: THÔNG TIN GIỚI THIỆU -->
+        <div class="tree-group">
+          <div class="tree-group-title text-secondary">
+            <i class="fa-solid fa-circle-question"></i> 4. Trang Thông Tin Bổ Trợ
+          </div>
+          <ul class="tree-list">
+            <li class="tree-item">
+              <a href="gioithieu_website_thanhvien.html" class="tree-link">
+                <i class="fa-solid fa-users text-secondary"></i>
+                <div>
+                  gioithieu_website_thanhvien.html (Giới Thiệu Đồ Án & Nhóm)
+                  <span class="tree-desc">Thông tin môn học, đề tài, công nghệ áp dụng, danh sách thành viên nhóm</span>
+                </div>
+              </a>
+            </li>
+            <li class="tree-item">
+              <a href="sitemap.html" class="tree-link">
+                <i class="fa-solid fa-sitemap text-secondary"></i>
+                <div>
+                  sitemap.html (Sơ Đồ Trang Web)
+                  <span class="tree-desc">Bạn đang ở trang này - Cây liên kết trực quan toàn bộ hệ thống</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+</body>
+</html>

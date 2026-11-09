@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduMarket - Sàn Đồ Dùng Học Tập & Đời Sống Sinh Viên</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       HEADER TỐI GIẢN TONE XANH (CLEAN BLUE NAV)
+       ========================================================================= -->
+  <header class="header-wrapper">
+    <!-- Topbar tiện ích -->
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html">
+            <i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên
+          </a>
+          <span class="header-topbar-divider"></span>
+          <span><i class="fa-solid fa-graduation-cap"></i> Cổng trao đổi học tập & tiện ích phòng trọ</span>
+        </div>
+
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html">
+            <i class="fa-regular fa-circle-question"></i> Trợ Giúp
+          </a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center">
+            <!-- JS tự động render trạng thái tài khoản -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="header-main">
+      <div class="container">
+        <!-- Logo -->
+        <a href="trangchu.html" class="header-logo">
+          <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+          <div class="header-logo-text">
+            <span class="header-logo-title">EduMarket</span>
+            <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+          </div>
+        </a>
+
+        <!-- Khung tìm kiếm trung tâm -->
+        <div class="header-search-wrapper">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input" placeholder="Tìm kiếm giáo trình, máy tính Casio, balo, đèn học, bình giữ nhiệt...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+          <div class="header-search-tags">
+            <span class="text-muted">Gợi ý:</span>
+            <a href="danhsachsanpham.html?search=Casio">Casio fx-580</a>
+            <a href="danhsachsanpham.html?search=Giáo trình">Giáo trình Web</a>
+            <a href="danhsachsanpham.html?search=Balo">Balo laptop</a>
+            <a href="danhsachsanpham.html?search=Đèn">Đèn bàn chống cận</a>
+            <a href="danhsachsanpham.html?search=Bình">Bình giữ nhiệt</a>
+          </div>
+        </div>
+
+        <!-- Giỏ hàng & Mini-cart -->
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+
+          <!-- Popover mini giỏ hàng -->
+          <div class="header-mini-cart">
+            <div class="mini-cart-header">Món đồ vừa thêm vào giỏ</div>
+            <div id="mini-cart-items" class="mini-cart-list"></div>
+            <div id="mini-cart-footer" class="mini-cart-footer">
+              <span id="mini-cart-count-text" class="text-muted" style="font-size: 0.85rem;">0 món</span>
+              <a href="giohang.html" class="btn btn-sm btn-primary">Xem Giỏ Hàng</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       NỘI DUNG CHÍNH (DANH MỤC & DANH SÁCH SẢN PHẨM)
+       ========================================================================= -->
+  <main>
+    <div class="container" style="padding-top: 24px;">
+      
+      <!-- 1. DANH MỤC SẢN PHẨM (CATEGORY GRID) -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fa-solid fa-layer-group"></i> DANH MỤC SẢN PHẨM
+          </h2>
+          <a href="danhsachsanpham.html" class="text-primary fw-semibold" style="font-size: 0.9rem;">
+            Tất cả danh mục <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+        <!-- Lưới danh mục sạch sẽ -->
+        <div id="category-grid-container" class="category-grid"></div>
+      </section>
+
+      <!-- 2. DANH SÁCH SẢN PHẨM (PRODUCT GRID) -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fa-solid fa-boxes-stacked"></i> DANH SÁCH SẢN PHẨM
+          </h2>
+        </div>
+        
+        <!-- Lưới sản phẩm -->
+        <div id="suggested-products-grid" class="product-grid"></div>
+
+        <!-- Nút xem thêm -->
+        <div class="home-loadmore-wrap">
+          <a href="danhsachsanpham.html" class="btn btn-loadmore">
+            Xem Thêm Nhiều Sản Phẩm Hơn <i class="fa-solid fa-angle-right" style="margin-left: 6px;"></i>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-grid">
+          <!-- Cột 1 -->
+          <div>
+            <h4 class="footer-heading">Về EduMarket</h4>
+            <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 14px;">
+              Sàn thương mại điện tử Đồ dùng học tập & Đời sống sinh viên. Nền tảng kết nối trao đổi giáo trình, dụng cụ học tập và thiết bị phòng trọ giữa các bạn sinh viên.
+            </p>
+            <div class="d-flex align-center gap-3">
+              <a href="https://github.com" target="_blank" class="text-primary"><i class="fa-brands fa-github" style="font-size: 1.3rem;"></i></a>
+              <a href="https://facebook.com" target="_blank" class="text-primary"><i class="fa-brands fa-facebook" style="font-size: 1.3rem;"></i></a>
+            </div>
+          </div>
+
+          <!-- Cột 2 -->
+          <div>
+            <h4 class="footer-heading">Hỗ Trợ Sinh Viên</h4>
+            <ul class="footer-links">
+              <li><a href="gioithieu_website_thanhvien.html">Trung Tâm Trợ Giúp</a></li>
+              <li><a href="kenhnguoiban.html">Hướng Dẫn Mở Gian Hàng</a></li>
+              <li><a href="donmua.html">Theo Dõi Đơn Hàng</a></li>
+              <li><a href="yeuthich.html">Sản Phẩm Yêu Thích</a></li>
+            </ul>
+          </div>
+
+          <!-- Cột 3 -->
+          <div>
+            <h4 class="footer-heading">Liên Kết</h4>
+            <ul class="footer-links">
+              <li><a href="danhsachsanpham.html">Tất Cả Sản Phẩm</a></li>
+              <li><a href="giohang.html">Giỏ Hàng Của Tôi</a></li>
+              <li><a href="gioithieu_website_thanhvien.html">Giới Thiệu Đồ Án Nhóm</a></li>
+              <li><a href="sitemap.html">Sơ Đồ Trang Web</a></li>
+            </ul>
+          </div>
+
+          <!-- Cột 4 -->
+          <div>
+            <h4 class="footer-heading">Phương Thức Thanh Toán</h4>
+            <div class="footer-badges">
+              <span class="footer-badge-icon"><i class="fa-solid fa-money-bill-wave text-success"></i> Tiền Mặt (COD)</span>
+              <span class="footer-badge-icon"><i class="fa-solid fa-qrcode text-primary"></i> VietQR Chuyển Khoản</span>
+              <span class="footer-badge-icon"><i class="fa-solid fa-wallet text-warning"></i> Ví Trả Sau SPayLater</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-nav">
+          <a href="trangchu.html">Trang Chủ</a>
+          <a href="danhsachsanpham.html">Sản Phẩm</a>
+          <a href="kenhnguoiban.html">Kênh Người Bán</a>
+          <a href="gioithieu_website_thanhvien.html">Nhóm Sinh Viên</a>
+          <a href="sitemap.html">Sơ Đồ Web</a>
+        </div>
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+        <p style="margin-top: 4px; font-size: 0.8rem;">Giao diện tối giản, tone xanh hiện đại, lưu trữ LocalStorage Web API.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/home/view/home-view.js"></script>
+  <script src="js/modules/home/controller/home-controller.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kênh Người Bán Sinh Viên - EduMarket Seller</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/seller.css">
+</head>
+<body>
+
+  <!-- HEADER KÊNH NGƯỜI BÁN -->
+  <header class="header-wrapper" style="background: var(--color-primary-dark); color: #ffffff;">
+    <div class="header-main" style="padding: 12px 0;">
+      <div class="container d-flex align-center justify-between">
+        <div class="d-flex align-center gap-3">
+          <a href="kenhnguoiban.html" class="header-logo" style="color: #ffffff;">
+            <i class="fa-solid fa-store header-logo-icon" style="color: #60a5fa;"></i>
+            <div class="header-logo-text">
+              <span class="header-logo-title" style="color: #ffffff;">EduMarket</span>
+              <span class="header-logo-subtitle" style="color: #93c5fd;">Kênh Bán Đồ Sinh Viên</span>
+            </div>
+          </a>
+          <span style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 14px; font-weight: 500; font-size: 1.05rem;">
+            Quản Lý Gian Hàng Của Bạn
+          </span>
+        </div>
+
+        <div class="d-flex align-center gap-3">
+          <a href="trangchu.html" class="btn btn-sm btn-outline text-white" style="border-color: rgba(255,255,255,0.5); color: #ffffff;">
+            <i class="fa-solid fa-arrow-left"></i> Về Sàn Mua Sắm
+          </a>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container seller-page-wrapper">
+      
+      <!-- BANNER SHOP INFO -->
+      <div class="seller-header-banner">
+        <div class="seller-shop-profile">
+          <img id="seller-avatar-display" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80" alt="Avatar Shop" class="seller-shop-avatar">
+          <div>
+            <h1 id="seller-shop-name-display" class="seller-shop-name">Cửa Hàng Văn Phòng Phẩm Minh Trí</h1>
+            <div id="seller-owner-name-display" class="seller-owner-name">Chủ shop: Nguyễn Văn An (20210001)</div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm" style="background: rgba(255,255,255,0.18); color: #ffffff;" onclick="Storage.resetDatabase(); Toast.info('Đã Reset', 'Đã khôi phục dữ liệu ban đầu!'); setTimeout(()=>location.reload(), 800);">
+            <i class="fa-solid fa-rotate"></i> Reset Dữ Liệu Test
+          </button>
+        </div>
+      </div>
+
+      <!-- 1. BẢNG DASHBOARD KPI -->
+      <section class="seller-kpi-grid">
+        <div class="kpi-card kpi-revenue">
+          <div class="kpi-icon-box"><i class="fa-solid fa-coins"></i></div>
+          <div>
+            <div class="kpi-label">Tổng Doanh Thu Của Shop</div>
+            <div id="kpi-revenue-val" class="kpi-value text-success">0 đ</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-orders">
+          <div class="kpi-icon-box"><i class="fa-solid fa-clipboard-check"></i></div>
+          <div>
+            <div class="kpi-label">Đơn Hàng Mới Cần Xử Lý</div>
+            <div id="kpi-pending-orders-val" class="kpi-value text-primary">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-products">
+          <div class="kpi-icon-box"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <div>
+            <div class="kpi-label">Sản Phẩm Đang Đăng Bán</div>
+            <div id="kpi-total-prods-val" class="kpi-value text-secondary">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-lowstock">
+          <div class="kpi-icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div>
+            <div class="kpi-label">Cảnh Báo Sắp Hết Hàng (≤ 2)</div>
+            <div id="kpi-low-stock-val" class="kpi-value text-warning">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. FORM ĐĂNG BÁN SẢN PHẨM -->
+      <section class="seller-section-card">
+        <h2 class="seller-section-title">
+          <i class="fa-solid fa-plus-circle"></i> Đăng Món Đồ Mới Lên Sàn
+        </h2>
+
+        <form id="form-seller-new-product">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Tên sản phẩm *</label>
+              <input type="text" id="new-prod-name" class="form-input" placeholder="Ví dụ: Vở Campus 120 trang, Giáo trình C++..." required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Danh mục sản phẩm *</label>
+              <select id="new-prod-category" class="form-input" required>
+                <!-- Render bởi JS -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">Giá bán sinh viên (VNĐ) *</label>
+              <input type="number" id="new-prod-price" class="form-input" placeholder="Ví dụ: 85000" min="1000" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Giá gốc ban đầu (nếu có)</label>
+              <input type="number" id="new-prod-original-price" class="form-input" placeholder="Ví dụ: 110000" min="0">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số lượng có sẵn *</label>
+              <input type="number" id="new-prod-stock" class="form-input" placeholder="Ví dụ: 10" min="0" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Link ảnh chụp sản phẩm (URL trực tuyến) *</label>
+              <input type="url" id="new-prod-image" class="form-input" placeholder="https://images.unsplash.com/..." required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Thương hiệu / Tình trạng</label>
+              <input type="text" id="new-prod-brand" class="form-input" placeholder="Ví dụ: Mới 100%, Like New 95%, Deli...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mô tả công năng & lưu ý nhận đồ *</label>
+            <textarea id="new-prod-desc" class="form-input" rows="4" placeholder="Mô tả chi tiết món đồ, vị trí có thể giao trực tiếp (KTX, sảnh tòa nhà)..." required></textarea>
+          </div>
+
+          <div class="text-right">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Đăng Lên Sàn Ngay
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3. QUẢN LÝ KHO SẢN PHẨM -->
+      <section class="seller-section-card">
+        <h2 class="seller-section-title">
+          <i class="fa-solid fa-boxes-packing"></i> Danh Sách Sản Phẩm Của Tôi
+        </h2>
+
+        <div class="seller-table-wrap">
+          <table class="seller-table">
+            <thead>
+              <tr>
+                <th>Sản Phẩm</th>
+                <th>Giá Bán</th>
+                <th>Tồn Kho</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="seller-products-table-body"></tbody>
+          </table>
+        </div>
+
+        <div id="seller-products-empty" class="empty-state d-none">
+          <p class="text-muted">Bạn chưa đăng món đồ nào. Hãy dùng form phía trên để đăng đồ nhé!</p>
+        </div>
+      </section>
+
+      <!-- 4. QUẢN LÝ ĐƠN HÀNG BÁN -->
+      <section class="seller-section-card">
+        <h2 class="seller-section-title">
+          <i class="fa-solid fa-truck-ramp-box"></i> Đơn Hàng Của Khách Mua
+        </h2>
+
+        <div class="seller-table-wrap">
+          <table class="seller-table">
+            <thead>
+              <tr>
+                <th>Mã Đơn / Ngày Đặt</th>
+                <th>Người Nhận & Địa Chỉ</th>
+                <th>Món Đồ Được Mua</th>
+                <th>Thu Nhập (VNĐ)</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác Duyệt Đơn</th>
+              </tr>
+            </thead>
+            <tbody id="seller-orders-table-body"></tbody>
+          </table>
+        </div>
+
+        <div id="seller-orders-empty" class="empty-state d-none">
+          <p class="text-muted">Chưa có đơn đặt mua nào từ khách hàng.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Module Kênh Người Bán Sinh Viên.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/seller/view/seller-view.js"></script>
+  <script src="js/modules/seller/controller/seller-controller.js"></script>
+</body>
+</html>

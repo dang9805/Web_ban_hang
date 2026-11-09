@@ -1,0 +1,245 @@
+/* ==========================================================================
+   EDUMARKET - SELLER CENTER STYLESHEET (css/seller.css)
+   Phong cách: Tối giản, Hiện đại, Tone Xanh (Clean Blue Seller Center)
+   ========================================================================== */
+
+.seller-page-wrapper {
+  margin: 25px 0 60px;
+}
+
+/* Seller Header Banner */
+.seller-header-banner {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+  padding: 26px 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.2);
+}
+
+.seller-shop-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.seller-shop-avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.seller-shop-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.seller-owner-name {
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+
+/* 1. DASHBOARD KPI CARDS */
+.seller-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.kpi-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.kpi-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.kpi-revenue .kpi-icon-box {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.kpi-orders .kpi-icon-box {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.kpi-products .kpi-icon-box {
+  background: #f1f5f9;
+  color: var(--text-secondary);
+}
+
+.kpi-lowstock .kpi-icon-box {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+/* 2. FORM ĐĂNG BÁN SẢN PHẨM */
+.seller-section-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 26px 28px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.seller-section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 22px;
+}
+
+.seller-section-title i {
+  color: var(--color-primary);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+
+/* 3. BẢNG QUẢN LÝ SẢN PHẨM */
+.seller-table-wrap {
+  overflow-x: auto;
+}
+
+.seller-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-table th {
+  background: var(--bg-body);
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.seller-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+.seller-product-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.seller-product-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xs);
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+.seller-stock-input {
+  width: 75px;
+  border: 1.5px solid var(--border-dark);
+  padding: 6px 8px;
+  border-radius: var(--radius-xs);
+  text-align: center;
+  font-weight: 700;
+}
+
+.seller-stock-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* 4. QUẢN LÝ ĐƠN HÀNG */
+.seller-order-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-status-action {
+  padding: 7px 14px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .seller-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .seller-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

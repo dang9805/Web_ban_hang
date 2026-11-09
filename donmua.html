@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đơn Mua Của Tôi - EduMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-wrapper">
+    <div class="header-topbar">
+      <div class="container d-flex align-center justify-between">
+        <div class="header-topbar-left d-flex align-center">
+          <a href="kenhnguoiban.html"><i class="fa-solid fa-store"></i> Kênh Người Bán Sinh Viên</a>
+          <span class="header-topbar-divider"></span>
+          <a href="trangchu.html"><i class="fa-solid fa-house"></i> Về Trang Chủ</a>
+        </div>
+        <div class="header-topbar-right d-flex align-center">
+          <a href="gioithieu_website_thanhvien.html"><i class="fa-regular fa-circle-question"></i> Trợ Giúp</a>
+          <span class="header-topbar-divider"></span>
+          <div id="header-auth-section" class="d-flex align-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-main">
+      <div class="container">
+        <div class="d-flex align-center gap-4">
+          <a href="trangchu.html" class="header-logo">
+            <i class="fa-solid fa-book-open-reader header-logo-icon"></i>
+            <div class="header-logo-text">
+              <span class="header-logo-title">EduMarket</span>
+              <span class="header-logo-subtitle">Sàn Sinh Viên</span>
+            </div>
+          </a>
+          <span style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); border-left: 2px solid var(--border-color); padding-left: 16px;">
+            Lịch Sử & Tiến Trình Đơn Mua
+          </span>
+        </div>
+
+        <div class="header-search-wrapper" style="max-width: 450px;">
+          <form id="header-search-form" class="header-search-box">
+            <input type="text" id="header-search-input" class="header-search-input" placeholder="Tìm sản phẩm trên sàn...">
+            <button type="submit" class="header-search-btn" title="Tìm kiếm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="header-cart-wrapper">
+          <a href="giohang.html" class="header-cart-link" title="Xem giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="header-cart-badge" class="header-cart-badge">0</span>
+          </a>
+          <div class="header-mini-cart d-none"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container orders-page-wrapper">
+      
+      <!-- NAV TABS -->
+      <div class="orders-nav-tabs">
+        <div class="order-tab-item active" data-status="all">Tất Cả Đơn</div>
+        <div class="order-tab-item" data-status="ChoXacNhan">Chờ Xác Nhận</div>
+        <div class="order-tab-item" data-status="DangChuanBi">Đang Chuẩn Bị</div>
+        <div class="order-tab-item" data-status="DangGiao">Đang Giao Hàng</div>
+        <div class="order-tab-item" data-status="DaGiao">Đã Nhận Đồ</div>
+        <div class="order-tab-item" data-status="DaHuy">Đã Hủy</div>
+      </div>
+
+      <!-- DANH SÁCH ĐƠN HÀNG KÈM TIMELINE -->
+      <div id="orders-list-container"></div>
+
+      <!-- EMPTY STATE -->
+      <div id="orders-empty-state" class="empty-state d-none">
+        <i class="fa-regular fa-clipboard empty-state-icon"></i>
+        <div class="empty-state-title">Chưa có đơn hàng nào</div>
+        <p class="empty-state-desc">Bạn chưa có đơn đặt mua nào ở mục này. Hãy ghé trang chủ để khám phá nhé!</p>
+        <a href="danhsachsanpham.html" class="btn btn-primary">Khám Phá Sản Phẩm</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 EduMarket - Đồ án môn học: Hệ thống & Công nghệ Web.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/model/seed-data.js"></script>
+  <script src="js/core/model/storage.js"></script>
+  <script src="js/modules/catalog/model/product-service.js"></script>
+  <script src="js/modules/catalog/model/category-service.js"></script>
+  <script src="js/modules/cart/model/cart-service.js"></script>
+  <script src="js/modules/orders/model/order-service.js"></script>
+  <script src="js/modules/product-detail/model/review-service.js"></script>
+  <script src="js/modules/wishlist/model/wishlist-service.js"></script>
+  <script src="js/modules/auth/model/user-service.js"></script>
+  <script src="js/core/model/format-helper.js"></script>
+  <script src="js/core/view/toast-view.js"></script>
+  <script src="js/modules/shared/view/product-card-view.js"></script>
+  <script src="js/modules/shared/view/header-view.js"></script>
+  <script src="js/modules/shared/controller/header-controller.js"></script>
+  <script src="js/modules/orders/view/orders-view.js"></script>
+  <script src="js/modules/orders/controller/orders-controller.js"></script>
+</body>
+</html>
