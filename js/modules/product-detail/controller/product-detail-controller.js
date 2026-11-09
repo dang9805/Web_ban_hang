@@ -227,8 +227,13 @@ const ProductDetailController = {
         }
 
         const currentUser = UserService.getCurrentUser();
-        const userName = currentUser ? currentUser.hoTen : "Sinh viên ẩn danh";
-        const userId = currentUser ? currentUser.id : "guest";
+        if (!currentUser) {
+          Toast.warning("Cần đăng nhập", "Vui lòng đăng nhập trước khi gửi đánh giá.");
+          window.location.href = "dangnhap.html";
+          return;
+        }
+        const userName = currentUser.hoTen;
+        const userId = currentUser.id;
 
         ReviewService.addReview({
           productId: this.product.id,

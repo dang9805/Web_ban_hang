@@ -56,3 +56,15 @@ CREATE INDEX IF NOT EXISTS idx_products_seller ON products(seller_id);
 CREATE INDEX IF NOT EXISTS idx_orders_buyer ON orders(buyer_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_product ON order_items(product_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(product_id);
+CREATE TABLE IF NOT EXISTS user_state (
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  state_key TEXT NOT NULL CHECK (state_key IN ('cart', 'wishlist')),
+  payload TEXT NOT NULL,
+  PRIMARY KEY (user_id, state_key)
+) STRICT;
+CREATE TABLE IF NOT EXISTS wallet_refunds (
+  order_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id),
+  amount REAL NOT NULL CHECK (amount > 0),
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+) STRICT;

@@ -9,13 +9,15 @@ const UserService = {
   },
 
   setCurrentUser(user) {
-    Storage.set("currentUser", user);
+    const { password, passwordHash, passwordSalt, ...safeUser } = user;
+    Storage.set("currentUser", safeUser);
     localStorage.setItem("edumarket-authenticated", "1");
     return true;
   },
 
   logout() {
     Storage.remove("currentUser");
+    sessionStorage.removeItem("edumarket-access-token");
     localStorage.removeItem("edumarket-authenticated");
     return true;
   },
@@ -34,7 +36,10 @@ const UserService = {
         ? { success: true, user }
         : { success: false, message: "Tên đăng nhập hoặc mật khẩu không chính xác!" };
     }
-    if (result.success) this.setCurrentUser(result.user);
+    if (result.success) {
+      if (result.token) sessionStorage.setItem("edumarket-access-token", result.token);
+      this.setCurrentUser(result.user);
+    }
     return result;
   },
 
@@ -65,6 +70,7 @@ const UserService = {
     }
 
     if (result.success) {
+      if (result.token) sessionStorage.setItem("edumarket-access-token", result.token);
       const users = this.getAll().filter(user => user.id !== result.user.id);
       users.push(result.user);
       Storage.set("users", users);
@@ -73,10 +79,10 @@ const UserService = {
     return result;
   },
 
-  async updateViTraSau(userId, deltaAmount) {
+  async updateViTraSau(userId, deltaAmount, orderId = null) {
     let updatedUser;
     if (Storage.remoteConnected) {
-      const result = await ApiClient.post(`/users/${encodeURIComponent(userId)}/wallet`, { delta: deltaAmount });
+      const result = await ApiClient.post(`/users/${encodeURIComponent(userId)}/wallet`, { delta: deltaAmount, orderId });
       updatedUser = result.user;
     } else {
       const users = this.getAll();

@@ -76,12 +76,11 @@ const OrderService = {
     });
 
     // Nếu đơn đã thanh toán bằng ví SpayLater thì hoàn tiền vào ví
-    if (order.phuongThucThanhToan === "SPayLater") {
-      await UserService.updateViTraSau(order.buyerId, order.tongTien);
-    }
-
     this.updateStatus(orderId, "DaHuy");
     await Storage.flush();
+    if (order.phuongThucThanhToan === "SPayLater") {
+      await UserService.updateViTraSau(order.buyerId, order.tongTien, order.orderId);
+    }
     return { success: true, message: "Đã hủy đơn hàng thành công! Số lượng hàng đã được hoàn lại kho." };
   }
 };

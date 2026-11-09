@@ -246,6 +246,11 @@ const CartController = {
    * Xử lý xác thực form và tiến hành đặt hàng
    */
   async handleOrderSubmission() {
+    if (!UserService.getCurrentUser()) {
+      Toast.warning("Cần đăng nhập", "Vui lòng đăng nhập trước khi đặt hàng.");
+      window.location.href = "dangnhap.html";
+      return;
+    }
     // 1. Kiểm tra giỏ hàng và danh sách chọn
     if (this.selectedItems.length === 0) {
       Toast.warning("Chưa chọn món", "Vui lòng tick chọn ít nhất 1 sản phẩm để đặt hàng!");

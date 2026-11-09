@@ -4,18 +4,15 @@ const HeaderView = {
     const authWrapper = document.getElementById("header-auth-section");
     if (!authWrapper) return;
 
-    const links = `<a href="dangky.html" class="fw-medium">Đăng Ký</a>
-      <span class="header-topbar-divider"></span>
-      <a href="dangnhap.html" class="fw-medium">Đăng Nhập</a>`;
     const currentUser = UserService.getCurrentUser();
     if (!currentUser) {
-      authWrapper.innerHTML = links;
+      authWrapper.innerHTML = `<a href="dangky.html" class="fw-medium">Đăng Ký</a>
+        <span class="header-topbar-divider"></span>
+        <a href="dangnhap.html" class="fw-medium">Đăng Nhập</a>`;
       return;
     }
 
-    authWrapper.innerHTML = `${links}
-      <span class="header-topbar-divider"></span>
-      <div class="header-user-wrapper">
+    authWrapper.innerHTML = `<div class="header-user-wrapper">
         <div class="header-user-trigger">
           <img class="header-user-avatar" src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80'}" alt="${currentUser.hoTen}">
           <span class="header-user-name">${currentUser.hoTen}</span>
