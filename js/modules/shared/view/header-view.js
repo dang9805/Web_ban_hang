@@ -4,45 +4,31 @@ const HeaderView = {
     const authWrapper = document.getElementById("header-auth-section");
     if (!authWrapper) return;
 
+    const links = `<a href="dangky.html" class="fw-medium">Đăng Ký</a>
+      <span class="header-topbar-divider"></span>
+      <a href="dangnhap.html" class="fw-medium">Đăng Nhập</a>`;
     const currentUser = UserService.getCurrentUser();
-
-    if (currentUser) {
-      authWrapper.innerHTML = `
-        <div class="header-user-wrapper">
-          <div class="header-user-trigger">
-            <img class="header-user-avatar" src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80'}" alt="${currentUser.hoTen}">
-            <span class="header-user-name">${currentUser.hoTen}</span>
-            <i class="fa-solid fa-angle-down" style="font-size: 0.72rem; color: rgba(255,255,255,0.7);"></i>
-          </div>
-          <div class="header-user-dropdown">
-            <a href="donmua.html" class="header-dropdown-item">
-              <i class="fa-solid fa-clipboard-list"></i>
-              <span>Đơn Mua Của Tôi</span>
-            </a>
-            <a href="yeuthich.html" class="header-dropdown-item">
-              <i class="fa-solid fa-heart"></i>
-              <span>Món Đồ Đã Lưu</span>
-            </a>
-            <a href="kenhnguoiban.html" class="header-dropdown-item">
-              <i class="fa-solid fa-store"></i>
-              <span>Kênh Người Bán</span>
-            </a>
-            <div class="header-dropdown-divider"></div>
-            <a href="javascript:void(0)" id="btn-logout" class="header-dropdown-item text-danger">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              <span>Đăng Xuất</span>
-            </a>
-          </div>
-        </div>
-      `;
-    } else {
-      authWrapper.innerHTML = `
-        <a href="dangky.html" class="fw-medium">Đăng Ký</a>
-        <span class="header-topbar-divider"></span>
-        <a href="dangnhap.html" class="fw-medium">Đăng Nhập</a>
-      `;
+    if (!currentUser) {
+      authWrapper.innerHTML = links;
+      return;
     }
-  
+
+    authWrapper.innerHTML = `${links}
+      <span class="header-topbar-divider"></span>
+      <div class="header-user-wrapper">
+        <div class="header-user-trigger">
+          <img class="header-user-avatar" src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80'}" alt="${currentUser.hoTen}">
+          <span class="header-user-name">${currentUser.hoTen}</span>
+          <i class="fa-solid fa-angle-down" style="font-size: 0.72rem; color: rgba(255,255,255,0.7);"></i>
+        </div>
+        <div class="header-user-dropdown">
+          <a href="donmua.html" class="header-dropdown-item"><i class="fa-solid fa-clipboard-list"></i><span>Đơn Mua Của Tôi</span></a>
+          <a href="yeuthich.html" class="header-dropdown-item"><i class="fa-solid fa-heart"></i><span>Món Đồ Đã Lưu</span></a>
+          <a href="kenhnguoiban.html" class="header-dropdown-item"><i class="fa-solid fa-store"></i><span>Kênh Người Bán</span></a>
+          <div class="header-dropdown-divider"></div>
+          <a href="javascript:void(0)" id="btn-logout" class="header-dropdown-item text-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Đăng Xuất</span></a>
+        </div>
+      </div>`;
   },
   updateCartBadge(controller) {
     const badgeEl = document.getElementById("header-cart-badge");
