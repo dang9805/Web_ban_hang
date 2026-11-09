@@ -23,14 +23,14 @@ const ProductService = {
   create(productData) {
     const products = this.getAll();
     const newProduct = {
-      id: "SP" + String(Date.now()).slice(-6),
+      id: `SP-${crypto.randomUUID()}`,
       daBan: 0,
       anhPhu: productData.anhPhu || [productData.anhChinh],
       ngayDang: new Date().toISOString().split("T")[0],
       ...productData
     };
     products.unshift(newProduct);
-    Storage.set("products", products);
+    if (!Storage.set("products", products)) throw new Error("Không thể lưu sản phẩm vào bộ nhớ trình duyệt.");
     return newProduct;
   },
 

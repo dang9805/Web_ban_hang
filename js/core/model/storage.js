@@ -2,6 +2,7 @@
 const Storage = {
   remoteConnected: false,
   pendingWrites: Promise.resolve(),
+  lastWriteError: null,
   ready: Promise.resolve(),
   localOnlyKeys: new Set(["currentUser"]),
 
@@ -23,10 +24,15 @@ const Storage = {
     try {
       this.setLocal(key, value);
       if (this.remoteConnected && !this.localOnlyKeys.has(key) && key !== "users") {
+        this.lastWriteError = null;
         this.pendingWrites = this.pendingWrites
           .catch(() => {})
-          .then(() => ApiClient.put(`/state/${encodeURIComponent(key)}`, { value }));
-        this.pendingWrites.catch(error => console.error(`Không lưu được ${key} vào SQLite:`, error));
+          .then(() => ApiClient.put(`/state/${encodeURIComponent(key)}`, { value }))
+          .then(result => { this.lastWriteError = null; return result; });
+        this.pendingWrites.catch(error => {
+          this.lastWriteError = error;
+          console.error(`Không lưu được ${key} vào SQLite:`, error);
+        });
       }
       return true;
     } catch (error) {
@@ -83,8 +89,10 @@ const Storage = {
   async flush() {
     try {
       await this.pendingWrites;
+      this.lastWriteError = null;
       return true;
     } catch (error) {
+      this.lastWriteError = error;
       console.error("Không thể hoàn tất đồng bộ dữ liệu với SQLite:", error);
       return false;
     }

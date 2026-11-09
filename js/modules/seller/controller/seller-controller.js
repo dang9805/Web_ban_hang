@@ -97,8 +97,10 @@ const SellerController = {
     // 1. Xử lý Form đăng bán sản phẩm mới
     const formNewProduct = document.getElementById("form-seller-new-product");
     if (formNewProduct) {
-      formNewProduct.addEventListener("submit", (e) => {
+      formNewProduct.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const submitButton = formNewProduct.querySelector('button[type="submit"]');
+        if (submitButton?.disabled) return;
 
         const name = document.getElementById("new-prod-name").value.trim();
         const category = document.getElementById("new-prod-category").value;
@@ -119,27 +121,41 @@ const SellerController = {
           return;
         }
 
-        // Tạo sản phẩm mới tự gán nguoiBanId = currentUser.id
-        const newProduct = ProductService.create({
-          ten: name,
-          danhMuc: category,
-          gia: price,
-          giaGoc: originalPrice,
-          soLuongTon: stock,
-          anhChinh: image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-          anhPhu: [image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80"],
-          nguoiBanId: this.currentUser.id,
-          tenShop: this.currentUser.tenShop || "Gian hàng " + this.currentUser.hoTen,
-          thuongHieu: brand,
-          xuatXu: "Việt Nam",
-          tinhTrang: "Mới 100%",
-          moTa: desc,
-          diaDiem: "Ký túc xá Đại học"
-        });
+        if (submitButton) submitButton.disabled = true;
+        try {
+          ProductService.create({
+            ten: name,
+            danhMuc: category,
+            gia: price,
+            giaGoc: originalPrice,
+            soLuongTon: stock,
+            anhChinh: image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
+            anhPhu: [image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80"],
+            nguoiBanId: this.currentUser.id,
+            tenShop: this.currentUser.tenShop || "Gian hàng " + this.currentUser.hoTen,
+            thuongHieu: brand,
+            xuatXu: "Việt Nam",
+            tinhTrang: "Mới 100%",
+            moTa: desc,
+            diaDiem: "Ký túc xá Đại học"
+          });
 
-        Toast.success("Đăng bán thành công", `Sản phẩm "${FormatHelper.truncate(name, 25)}" đã được đưa lên sàn!`);
-        formNewProduct.reset();
-        this.refreshData();
+          if (Storage.remoteConnected && !(await Storage.flush())) {
+            throw new Error(Storage.lastWriteError?.message || "Máy chủ chưa lưu được sản phẩm.");
+          }
+
+          if (Storage.remoteConnected) {
+            Toast.success("Đăng bán thành công", `Sản phẩm "${FormatHelper.truncate(name, 25)}" đã được lưu lên sàn.`);
+          } else {
+            Toast.warning("Chưa đồng bộ lên sàn", "Sản phẩm chỉ được lưu trên thiết bị này vì chưa kết nối máy chủ.");
+          }
+          formNewProduct.reset();
+          this.refreshData();
+        } catch (error) {
+          Toast.error("Không đăng được sản phẩm", error.message || "Vui lòng kiểm tra kết nối và thử lại.");
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
       });
     }
 
