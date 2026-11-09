@@ -1,0 +1,13 @@
+{
+  "name": "edumarket",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EduMarket student marketplace with a SQLite API",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node server/index.js"
+  }
+}

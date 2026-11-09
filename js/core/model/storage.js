@@ -1,23 +1,36 @@
- ==============================================================================
-// STORAGE HELPER SERVICE (QUẢN LÝ DỮ LIỆU LOCALSTORAGE TẬP TRUNG)
-// ==============================================================================
+/** Local cache backed by the SQLite API when the backend is available. */
 const Storage = {
+  remoteConnected: false,
+  pendingWrites: Promise.resolve(),
+  ready: Promise.resolve(),
+  localOnlyKeys: new Set(["currentUser"]),
+
   get(key, defaultValue = null) {
     try {
       const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : defaultValue;
-    } catch (e) {
-      console.error(`Lỗi đọc localStorage key "${key}":`, e);
+    } catch (error) {
+      console.error(`Lỗi đọc localStorage key "${key}":`, error);
       return defaultValue;
     }
   },
 
+  setLocal(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+
   set(key, value) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      this.setLocal(key, value);
+      if (this.remoteConnected && !this.localOnlyKeys.has(key) && key !== "users") {
+        this.pendingWrites = this.pendingWrites
+          .catch(() => {})
+          .then(() => ApiClient.put(`/state/${encodeURIComponent(key)}`, { value }));
+        this.pendingWrites.catch(error => console.error(`Không lưu được ${key} vào SQLite:`, error));
+      }
       return true;
-    } catch (e) {
-      console.error(`Lỗi ghi localStorage key "${key}":`, e);
+    } catch (error) {
+      console.error(`Lỗi ghi localStorage key "${key}":`, error);
       return false;
     }
   },
@@ -26,60 +39,72 @@ const Storage = {
     try {
       localStorage.removeItem(key);
       return true;
-    } catch (e) {
-      console.error(`Lỗi xóa localStorage key "${key}":`, e);
+    } catch (error) {
+      console.error(`Lỗi xóa localStorage key "${key}":`, error);
       return false;
     }
   },
 
-  /**
-   * Khởi tạo cơ sở dữ liệu giả lập ban đầu vào LocalStorage
-   */
-  initDatabase() {
-    if (!localStorage.getItem("products")) {
-      this.set("products", MOCK_PRODUCTS);
+  async connectRemote() {
+    try {
+      const state = await ApiClient.get("/state");
+      for (const [key, value] of Object.entries(state)) this.setLocal(key, value);
+      const currentUser = this.get("currentUser");
+      if (currentUser?.password) {
+        const { password, ...safeUser } = currentUser;
+        this.setLocal("currentUser", safeUser);
+      }
+      this.remoteConnected = true;
+      console.info("EduMarket: đang dùng dữ liệu SQLite qua API.");
+    } catch (error) {
+      this.remoteConnected = false;
+      console.warn("Không kết nối được SQLite API; tiếp tục với dữ liệu localStorage.", error.message);
     }
-    if (!localStorage.getItem("categories")) {
-      this.set("categories", MOCK_CATEGORIES);
-    }
-    if (!localStorage.getItem("users")) {
-      this.set("users", MOCK_USERS);
-    }
-    if (!localStorage.getItem("currentUser")) {
-      // Mặc định khởi tạo sẵn phiên đăng nhập của user_shop1 (Nguyễn Văn An)
-      // Giúp giảng viên/người chấm bài trải nghiệm ngay mọi tính năng mà không bắt buộc phải gõ đăng nhập
-      this.set("currentUser", MOCK_USERS[0]);
-    }
-    if (!localStorage.getItem("cart")) {
-      this.set("cart", MOCK_CART);
-    }
-    if (!localStorage.getItem("orders")) {
-      this.set("orders", MOCK_ORDERS);
-    }
-    if (!localStorage.getItem("reviews")) {
-      this.set("reviews", MOCK_REVIEWS);
-    }
-    if (!localStorage.getItem("wishlist")) {
-      this.set("wishlist", MOCK_WISHLIST);
-    }
-    console.log(" Shopee Edu-Marketplace Database: Đã sẵn sàng hoạt động!");
+    return this.remoteConnected;
   },
 
-  /**
-   * Khôi phục toàn bộ dữ liệu về mặc định (phục vụ kiểm thử)
-   */
+  initDatabase() {
+    const initialValues = {
+      products: MOCK_PRODUCTS,
+      categories: MOCK_CATEGORIES,
+      users: MOCK_USERS,
+      currentUser: (() => {
+        const { password, ...user } = MOCK_USERS[0];
+        return user;
+      })(),
+      cart: MOCK_CART,
+      orders: MOCK_ORDERS,
+      reviews: MOCK_REVIEWS,
+      wishlist: MOCK_WISHLIST,
+    };
+    for (const [key, value] of Object.entries(initialValues)) {
+      if (!localStorage.getItem(key)) this.setLocal(key, value);
+    }
+    this.ready = this.connectRemote();
+    return this.ready;
+  },
+
+  async flush() {
+    try {
+      await this.pendingWrites;
+      return true;
+    } catch (error) {
+      console.error("Không thể hoàn tất đồng bộ dữ liệu với SQLite:", error);
+      return false;
+    }
+  },
+
   resetDatabase() {
-    this.set("products", MOCK_PRODUCTS);
-    this.set("categories", MOCK_CATEGORIES);
-    this.set("users", MOCK_USERS);
-    this.set("currentUser", MOCK_USERS[0]);
-    this.set("cart", MOCK_CART);
-    this.set("orders", MOCK_ORDERS);
-    this.set("reviews", MOCK_REVIEWS);
-    this.set("wishlist", MOCK_WISHLIST);
-    console.log(" Shopee Edu-Marketplace Database: Đã reset về trạng thái ban đầu!");
-  }
+    const initialValues = {
+      products: MOCK_PRODUCTS,
+      categories: MOCK_CATEGORIES,
+      cart: MOCK_CART,
+      orders: MOCK_ORDERS,
+      reviews: MOCK_REVIEWS,
+      wishlist: MOCK_WISHLIST,
+    };
+    for (const [key, value] of Object.entries(initialValues)) this.set(key, value);
+  },
 };
 
-//
 Storage.initDatabase();

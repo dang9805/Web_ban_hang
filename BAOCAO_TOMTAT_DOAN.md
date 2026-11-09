@@ -9,8 +9,8 @@
 ### 1. Mục đích đề tài
 * **Về mặt công nghệ & học thuật:**
   * Vận dụng toàn diện các chuẩn công nghệ Web Front-end hiện đại: **HTML5 Semantic, CSS3 (Modern Blue Theme, Responsive Flexbox/Grid) và JavaScript ES6+**.
-  * Xây dựng kiến trúc quản trị trạng thái và dữ liệu máy khách (Client-side Data Architecture) thông qua **Web Storage API (`localStorage` & `sessionStorage`)**, mô phỏng trọn vẹn mô hình sàn thương mại điện tử đa người bán (Multi-seller Marketplace) hoạt động độc lập không cần server backend.
-  * Sử dụng toàn bộ đường dẫn tương đối (relative paths), tối ưu hiệu năng để hệ thống **sẵn sàng deploy trực tiếp lên GitHub Pages**.
+  * Xây dựng mô hình client-server cho sàn thương mại điện tử đa người bán: giao diện HTML/CSS/JavaScript gọi API Node.js, dữ liệu marketplace được lưu bền vững trong SQLite; `localStorage` chỉ dùng làm cache phía trình duyệt.
+  * Sử dụng đường dẫn tương đối để phục vụ giao diện từ Node.js. Backend yêu cầu Node.js 22.13 trở lên và SQLite; GitHub Pages chỉ có thể phục vụ giao diện tĩnh, không chạy được API/database.
 * **Về mặt nghiệp vụ thực tế:**
   * Giải quyết bài toán mua sắm, tìm kiếm đồ dùng học tập, thiết bị điện tử phục vụ đồ án (máy tính Casio, chuột silent, balo laptop, đèn học chống cận, giá đỡ tản nhiệt) và trao đổi/thanh lý giáo trình cũ giữa các thế hệ sinh viên trong các khuôn viên đại học và ký túc xá.
 
@@ -65,7 +65,7 @@
 
 ### 1. Về mặt kiến trúc & công nghệ
 1. **Chuyển đổi Backend & Cơ sở dữ liệu thực tế:**
-   * Thay thế Web Storage API bằng hệ thống Backend RESTful API hoặc GraphQL viết bằng **Node.js (NestJS / Express)** hoặc **Python (FastAPI / Django)** kết hợp cơ sở dữ liệu quan hệ **PostgreSQL / MySQL**.
+   * Mở rộng hệ thống SQLite hiện tại theo quy mô triển khai, bổ sung phân quyền, session/token và chuyển sang PostgreSQL/MySQL nếu cần chạy nhiều máy chủ.
 2. **Xác thực bảo mật SSO & OAuth2:**
    * Tích hợp đăng nhập một chạm thông qua tài khoản Google hoặc hệ thống tài khoản sinh viên của nhà trường (`@...edu.vn`).
 3. **Nhắn tin trực tiếp thời gian thực (Realtime Chatbox):**
@@ -86,17 +86,13 @@
 ## IV. CẤU TRÚC TỆP TIN & HƯỚNG DẪN TRIỂN KHAI
 
 ### 1. Cấu trúc thư mục
+
 ```text
 /
-├── css/
-│   ├── style.css          # CSS toàn trang, biến màu xanh, layout, header, footer, toast
-│   ├── home.css           # CSS danh mục, lưới sản phẩm, nút xem thêm
-│   ├── product.css        # CSS danh sách tìm kiếm, chi tiết sản phẩm 2 nửa, đánh giá
-│   ├── cart.css           # CSS giỏ hàng, 3 hình thức thanh toán, modal QR, timeline
-│   └── seller.css         # CSS Kênh người bán, dashboard 4 KPI, bảng duyệt đơn
+├── css/                       # Styles dùng chung và theo trang
 ├── js/
-│   ├── core/                 # Model và view dùng chung của ứng dụng
-│   └── modules/              # Mỗi tính năng tổ chức theo MVC: model, view, controller
+│   ├── core/model/            # API client, cache, seed và tiện ích
+│   └── modules/               # MVC theo tính năng
 │       ├── auth/
 │       ├── cart/
 │       ├── catalog/
@@ -105,30 +101,17 @@
 │       ├── product-detail/
 │       ├── seller/
 │       ├── wishlist/
-│       └── shared/├── index.html             # Chuyển hướng tự động vào trang chủ trên GitHub Pages
-├── trangchu.html          # Trang chủ hệ thống EduMarket
-├── danhsachsanpham.html   # Trang danh sách sản phẩm & bộ lọc tìm kiếm
-├── chitietsanpham.html    # Trang chi tiết sản phẩm & gửi đánh giá
-├── giohang.html           # Trang giỏ hàng, mã giảm giá & thanh toán
-├── donmua.html            # Trang lịch sử đơn mua & timeline tiến trình
-├── yeuthich.html          # Trang danh sách món đồ đã lưu
-├── kenhnguoiban.html      # Trang Kênh Người Bán (Shopee Seller Centre)
-├── dangky.html            # Trang đăng ký tài khoản sinh viên
-├── dangnhap.html          # Trang đăng nhập kèm tài khoản mẫu
-├── gioithieu_website_thanhvien.html # Trang thông tin đề tài & nhóm sinh viên
-└── sitemap.html           # Sơ đồ cây liên kết toàn bộ website
+│       └── shared/
+├── server/
+│   ├── index.js               # HTTP API, phục vụ frontend, auth và kết nối SQLite
+│   ├── schema.sql             # Schema SQLite cho marketplace
+│   └── data/                  # Database tạo tự động, không commit
+├── package.json
+├── README.md
+└── *.html                     # Các trang giao diện
 ```
-
 ### 2. Hướng dẫn chạy & triển khai
-* **Chạy cục bộ trên máy tính:** Mở trực tiếp file `trangchu.html` hoặc `index.html` bằng bất kỳ trình duyệt web hiện đại nào (Google Chrome, Microsoft Edge, Mozilla Firefox).
-* **Deploy lên GitHub Pages:**
-  1. Khởi tạo kho Git và commit toàn bộ thư mục:
-     ```bash
-     git init
-     git add .
-     git commit -m "Init EduMarket Campus Marketplace Project"
-     ```
-  2. Tạo repository trên GitHub và đẩy mã nguồn lên.
-  3. Vào **Settings ➔ Pages ➔ Build and deployment**: chọn nhánh `main` và thư mục `/ (root)`.
-  4. Hệ thống sẽ tự động xuất bản website trực tuyến mà không cần cài đặt thêm bất kỳ môi trường máy chủ nào.
 
+* **Yêu cầu:** Node.js 22.13 trở lên.
+* **Chạy cục bộ:** Tại thư mục dự án, chạy `npm start`, sau đó mở `http://localhost:3000`. Backend tự tạo SQLite database và nạp dữ liệu mẫu ở lần chạy đầu tiên.
+* **Triển khai:** Dùng host chạy Node.js có persistent disk để lưu file SQLite. GitHub Pages không chạy được backend; nếu tách frontend/API thành hai domain, cấu hình `js/core/model/api-config.js` và origin được phép trên backend.

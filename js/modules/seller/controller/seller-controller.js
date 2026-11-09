@@ -6,7 +6,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  SellerController.init();
+  Storage.ready.then(() => SellerController.init());
 });
 
 const SellerController = {

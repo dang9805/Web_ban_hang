@@ -6,7 +6,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  AuthController.init();
+  Storage.ready.then(() => AuthController.init());
 });
 
 const AuthController = {
@@ -36,7 +36,7 @@ const AuthController = {
     const form = document.getElementById("form-register");
     if (!form) return;
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const username = document.getElementById("reg-username").value.trim();
@@ -90,7 +90,7 @@ const AuthController = {
       }
 
       // Tiến hành lưu tài khoản vào cơ sở dữ liệu
-      const res = UserService.register({
+      const res = await UserService.register({
         username,
         password,
         hoTen: fullname,
@@ -118,7 +118,7 @@ const AuthController = {
     const form = document.getElementById("form-login");
     if (!form) return;
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const username = document.getElementById("login-username").value.trim();
@@ -129,7 +129,7 @@ const AuthController = {
         return;
       }
 
-      const res = UserService.login(username, password);
+      const res = await UserService.login(username, password);
 
       if (res.success) {
         Toast.success("Đăng nhập thành công", `Xin chào, ${res.user.hoTen}! Chúc bạn mua sắm vui vẻ.`);

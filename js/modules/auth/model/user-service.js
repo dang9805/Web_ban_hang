@@ -1,4 +1,4 @@
-// 7. Dịch vụ Người dùng & Xác thực (Auth)
+/** Account model/service; credentials are checked by the backend when available. */
 const UserService = {
   getAll() {
     return Storage.get("users", []);
@@ -18,54 +18,77 @@ const UserService = {
     return true;
   },
 
-  login(username, password) {
-    const users = this.getAll();
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      this.setCurrentUser(user);
-      return { success: true, user };
-    }
-    return { success: false, message: "Tên đăng nhập hoặc mật khẩu không chính xác!" };
-  },
-
-  register(userData) {
-    const users = this.getAll();
-    if (users.some(u => u.username === userData.username)) {
-      return { success: false, message: "Tên đăng nhập đã tồn tại!" };
-    }
-    if (users.some(u => u.email === userData.email)) {
-      return { success: false, message: "Email đã được sử dụng!" };
-    }
-
-    const newUser = {
-      id: "user_" + Date.now().toString().slice(-6),
-      viTraSau: 500000, // Mặc định cấp hạn mức 500k cho sinh viên mới
-      tenShop: userData.tenShop || "Gian Hàng Sinh Viên " + userData.hoTen,
-      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80",
-      ...userData
-    };
-
-    users.push(newUser);
-    Storage.set("users", users);
-    this.setCurrentUser(newUser);
-    return { success: true, user: newUser };
-  },
-
-  updateViTraSau(userId, deltaAmount) {
-    const users = this.getAll();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.viTraSau = Math.max(0, (user.viTraSau || 0) + deltaAmount);
-      Storage.set("users", users);
-
-      // Cập nhật cả currentUser nếu đang đăng nhập đúng tài khoản này
-      const current = this.getCurrentUser();
-      if (current && current.id === userId) {
-        current.viTraSau = user.viTraSau;
-        this.setCurrentUser(current);
+  async login(username, password) {
+    let result;
+    if (Storage.remoteConnected) {
+      try {
+        result = await ApiClient.post("/auth/login", { username, password });
+      } catch (error) {
+        return { success: false, message: error.message || "Không kết nối được máy chủ." };
       }
-      return user.viTraSau;
+    } else {
+      const user = this.getAll().find(item => item.username === username && item.password === password);
+      result = user
+        ? { success: true, user }
+        : { success: false, message: "Tên đăng nhập hoặc mật khẩu không chính xác!" };
     }
-    return null;
-  }
+    if (result.success) this.setCurrentUser(result.user);
+    return result;
+  },
+
+  async register(userData) {
+    let result;
+    if (Storage.remoteConnected) {
+      try {
+        result = await ApiClient.post("/auth/register", userData);
+      } catch (error) {
+        return { success: false, message: error.message || "Không kết nối được máy chủ." };
+      }
+    } else {
+      const users = this.getAll();
+      if (users.some(user => user.username === userData.username)) {
+        return { success: false, message: "Tên đăng nhập đã tồn tại!" };
+      }
+      if (users.some(user => user.email === userData.email)) {
+        return { success: false, message: "Email đã được sử dụng!" };
+      }
+      const user = {
+        id: "user_" + Date.now().toString().slice(-6),
+        viTraSau: 500000,
+        tenShop: userData.tenShop || `Gian Hàng Sinh Viên ${userData.hoTen}`,
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80",
+        ...userData,
+      };
+      result = { success: true, user };
+    }
+
+    if (result.success) {
+      const users = this.getAll().filter(user => user.id !== result.user.id);
+      users.push(result.user);
+      Storage.set("users", users);
+      this.setCurrentUser(result.user);
+    }
+    return result;
+  },
+
+  async updateViTraSau(userId, deltaAmount) {
+    let updatedUser;
+    if (Storage.remoteConnected) {
+      const result = await ApiClient.post(`/users/${encodeURIComponent(userId)}/wallet`, { delta: deltaAmount });
+      updatedUser = result.user;
+    } else {
+      const users = this.getAll();
+      const user = users.find(item => item.id === userId);
+      if (!user) return null;
+      user.viTraSau = Math.max(0, (user.viTraSau || 0) + deltaAmount);
+      updatedUser = user;
+      Storage.set("users", users);
+    }
+
+    const users = this.getAll().map(user => user.id === userId ? { ...user, ...updatedUser } : user);
+    Storage.set("users", users);
+    const current = this.getCurrentUser();
+    if (current && current.id === userId) this.setCurrentUser({ ...current, ...updatedUser });
+    return updatedUser.viTraSau;
+  },
 };

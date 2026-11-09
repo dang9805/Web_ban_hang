@@ -87,5 +87,5 @@ const HeaderController = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  HeaderController.init();
+  Storage.ready.then(() => HeaderController.init());
 });

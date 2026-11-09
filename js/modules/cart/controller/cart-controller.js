@@ -7,7 +7,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  CartController.init();
+  Storage.ready.then(() => CartController.init());
 });
 
 const CartController = {
@@ -231,7 +231,7 @@ const CartController = {
     // 7. Bấm nút "ĐẶT HÀNG"
     const btnSubmitOrder = document.getElementById("btn-submit-order");
     if (btnSubmitOrder) {
-      btnSubmitOrder.addEventListener("click", () => this.handleOrderSubmission());
+      btnSubmitOrder.addEventListener("click", async () => this.handleOrderSubmission());
     }
   },
 
@@ -245,7 +245,7 @@ const CartController = {
   /**
    * Xử lý xác thực form và tiến hành đặt hàng
    */
-  handleOrderSubmission() {
+  async handleOrderSubmission() {
     // 1. Kiểm tra giỏ hàng và danh sách chọn
     if (this.selectedItems.length === 0) {
       Toast.warning("Chưa chọn món", "Vui lòng tick chọn ít nhất 1 sản phẩm để đặt hàng!");
@@ -292,7 +292,12 @@ const CartController = {
         return;
       }
       // Trừ hạn mức ví
-      UserService.updateViTraSau(currentUser.id, -finalTotal);
+      try {
+        await UserService.updateViTraSau(currentUser.id, -finalTotal);
+      } catch (error) {
+        Toast.error("Không thể thanh toán", error.message);
+        return;
+      }
     }
 
     // 4. Lấy chi tiết các món được đặt
@@ -325,6 +330,8 @@ const CartController = {
     this.selectedItems.forEach(id => {
       CartService.removeFromCart(id);
     });
+
+    await Storage.flush();
 
     // 7. Cập nhật Badge giỏ hàng và chuyển hướng sang trang Đơn mua
     HeaderController.updateCartBadge();

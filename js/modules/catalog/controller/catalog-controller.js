@@ -6,7 +6,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  CatalogController.init();
+  Storage.ready.then(() => CatalogController.init());
 });
 
 const CatalogController = {

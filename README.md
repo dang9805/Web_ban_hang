@@ -1,52 +1,34 @@
 # EduMarket
 
-Đồ án môn học Hệ thống & Công nghệ Web. Đây là ứng dụng front end tĩnh dùng HTML, CSS và JavaScript thuần; dữ liệu mô phỏng được lưu trong `localStorage` để chạy trực tiếp hoặc trên GitHub Pages.
+Sàn thương mại điện tử sinh viên, xây dựng bằng HTML/CSS/JavaScript và Node.js. Dữ liệu được lưu trên backend vào SQLite, không còn phụ thuộc vào `localStorage` làm nguồn dữ liệu chính. Trình duyệt giữ một bản cache để giao diện phản hồi nhanh.
 
-Xem mô tả nghiệp vụ tại [BAOCAO_TOMTAT_DOAN.md](BAOCAO_TOMTAT_DOAN.md).
+## Yêu cầu
+
+- Node.js 22.13 trở lên (SQLite tích hợp `node:sqlite`).
+- Không cần cài package bên ngoài.
 
 ## Cài đặt và chạy
 
-EduMarket là website tĩnh, không cần cài package hay cấu hình backend.
+1. Clone hoặc tải repository về máy.
+2. Mở terminal tại thư mục dự án.
+3. Chạy `npm start` (hoặc `node server/index.js`).
+4. Mở [http://localhost:3000](http://localhost:3000).
 
-1. Tải hoặc clone mã nguồn về máy.
-2. Mở thư mục dự án.
-3. Mở `trangchu.html` bằng trình duyệt. `index.html` cũng tự chuyển đến trang chủ.
+Lần chạy đầu tiên tự tạo `server/data/edumarket.sqlite` và nạp dữ liệu mẫu. SQLite database nằm trong thư mục bị Git ignore để dữ liệu cá nhân không bị push lên repository. Các tài khoản mẫu có thể xem trong trang Đăng nhập; dữ liệu mật khẩu trên máy chủ được băm bằng scrypt.
 
-Nếu muốn chạy qua web server cục bộ, mở terminal tại thư mục dự án và chạy:
+## Deploy
 
-```bash
-python -m http.server 8000
-```
+GitHub Pages chỉ phục vụ file tĩnh, không chạy được Node API hay SQLite. Để dùng DB thật, deploy toàn bộ ứng dụng trên một host chạy Node.js với persistent disk. Nếu frontend và API chạy ở hai domain khác nhau, sửa `window.EDUMARKET_API_URL` trong `js/core/model/api-config.js` thành URL API và đặt `EDUMARKET_ALLOWED_ORIGIN` trên backend thành origin frontend được phép.
 
-Sau đó truy cập [http://localhost:8000](http://localhost:8000). Nếu máy chưa cài Python, có thể dùng VS Code với tiện ích Live Server.
+## Database và API
 
-## Triển khai GitHub Pages
+Backend dùng SQLite qua API tích hợp `node:sqlite`. SQLite có các bảng `users`, `categories`, `products`, `orders`, `order_items`, `cart_items`, `reviews` và `wishlist_items`. Dữ liệu chi tiết được lưu kèm payload JSON để giữ nguyên hợp đồng hiện tại của frontend; backend nạp dữ liệu mẫu lần đầu, hỗ trợ đọc/ghi collection, đăng ký/đăng nhập và cập nhật ví. Các endpoint chính:
 
-1. Đẩy thư mục dự án lên một repository GitHub.
-2. Trong repository, vào **Settings → Pages**.
-3. Chọn nhánh chứa mã nguồn và thư mục gốc (`/root`), rồi lưu.
-4. Mở URL GitHub Pages được hiển thị ở phần Pages.
+- `GET /api/health`
+- `GET /api/state`
+- `PUT /api/state/:collection`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/users/:id/wallet`
 
-Ứng dụng dùng HTML/CSS/JavaScript thuần, không cần bước build. Dữ liệu demo được lưu trong `localStorage` của trình duyệt.
-## Kiến trúc module và MVC
-
-Mỗi tính năng nằm trong `js/modules/<module>/` và có các lớp `model`, `view`, `controller` phù hợp. HTML cung cấp cấu trúc trang; các View module chịu trách nhiệm render/cập nhật DOM, còn Controller điều phối nghiệp vụ và sự kiện. Phần dùng chung nằm trong `core` và `modules/shared`.
-
-```text
-js/
-├── core/
-│   ├── model/                  # Dữ liệu mẫu, localStorage, format helper
-│   └── view/                   # Toast dùng chung
-└── modules/
-    ├── auth/{model,view,controller}/
-    ├── cart/{model,view,controller}/
-    ├── catalog/{model,view,controller}/
-    ├── home/{view,controller}/
-    ├── orders/{model,view,controller}/
-    ├── product-detail/{model,view,controller}/
-    ├── seller/{view,controller}/
-    ├── wishlist/{model,view,controller}/
-    └── shared/{view,controller}/ # Product card và header
-```
-
-Các model nghiệp vụ nằm cạnh controller của module tương ứng. Trang HTML nạp lần lượt model nền tảng, model tính năng cần dùng, view dùng chung, controller dùng chung và controller/view riêng của trang. Script thường được giữ để hỗ trợ mở HTML trực tiếp và GitHub Pages.
+Cấu trúc frontend tiếp tục theo module MVC trong `js/modules`; lớp `Storage` đồng bộ cache với backend, các service nghiệp vụ dùng API cho tài khoản và SQLite cho dữ liệu marketplace.

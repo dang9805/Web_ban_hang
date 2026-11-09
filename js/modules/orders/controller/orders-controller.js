@@ -6,7 +6,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  OrdersController.init();
+  Storage.ready.then(() => OrdersController.init());
 });
 
 const OrdersController = {
@@ -49,12 +49,12 @@ const OrdersController = {
     });
 
     // Sự kiện bấm nút Hủy đơn hàng
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", async (e) => {
       const btnCancel = e.target.closest(".btn-cancel-order");
       if (btnCancel) {
         const orderId = btnCancel.dataset.id;
         if (confirm(`Bạn có chắc chắn muốn hủy đơn hàng ${orderId}? Hàng sẽ được tự động hoàn trả lại kho của Shop.`)) {
-          const res = OrderService.cancelOrder(orderId);
+          const res = await OrderService.cancelOrder(orderId);
           if (res.success) {
             Toast.success("Đã hủy đơn", res.message);
             this.loadOrders();

@@ -56,7 +56,7 @@ const OrderService = {
     return null;
   },
 
-  cancelOrder(orderId) {
+  async cancelOrder(orderId) {
     const order = this.getById(orderId);
     if (!order) return { success: false, message: "Không tìm thấy đơn hàng!" };
 
@@ -77,10 +77,11 @@ const OrderService = {
 
     // Nếu đơn đã thanh toán bằng ví SpayLater thì hoàn tiền vào ví
     if (order.phuongThucThanhToan === "SPayLater") {
-      UserService.updateViTraSau(order.buyerId, order.tongTien);
+      await UserService.updateViTraSau(order.buyerId, order.tongTien);
     }
 
     this.updateStatus(orderId, "DaHuy");
+    await Storage.flush();
     return { success: true, message: "Đã hủy đơn hàng thành công! Số lượng hàng đã được hoàn lại kho." };
   }
 };
